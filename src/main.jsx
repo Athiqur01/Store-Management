@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div className='container mx-auto'>
+    <div className='container mx-auto bg-[#9C27B0]'>
     <RouterProvider router={router} />
     </div>
   </StrictMode>,
