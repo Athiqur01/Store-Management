@@ -5,12 +5,10 @@ const Navbar = () => {
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Home</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Add Items</NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Requisition</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Requisition Request</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>SRB</NavLink>    
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Ledger</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>SIB</NavLink>
+                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Request</NavLink>
+                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Search</NavLink>
+                    
                   </>
 
     return (
@@ -49,7 +47,7 @@ const Navbar = () => {
         <li><a>Item 3</a></li>
       </ul>
     </div>
-    <a className="btn btn-ghost px-4 py-2 text-xl font-semibold text-[#FFFFFF]">BBM Store Management</a>
+    <a className="btn btn-ghost px-4 py-2 text-xl font-semibold text-[#FFFFFF]">BBM Inventory Management</a>
   </div>
   {/* Navbar center-------- */}
   <div className="navbar-center hidden lg:flex">

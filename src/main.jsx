@@ -7,6 +7,7 @@ import {
 import './index.css'
 import Root from './Component/Root/Root';
 import Home from './Component/Home/Home';
+import AddItem from './Component/AddItem/AddItem';
 
 
 
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path:"/",
         element:<Home></Home>
+      },
+      {
+        path:'/addItem',
+        element:<AddItem></AddItem>
       }
     ]
   },
