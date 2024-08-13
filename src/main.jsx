@@ -8,9 +8,11 @@ import './index.css'
 import Root from './Component/Root/Root';
 import Home from './Component/Home/Home';
 import AddItem from './Component/AddItem/AddItem';
+import UpdateItem from './Component/UpdateItem/UpdateItem';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
-
+const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,15 +25,25 @@ const router = createBrowserRouter([
       {
         path:'/addItem',
         element:<AddItem></AddItem>
+      },
+      {
+        path:'/updateItem',
+        element:<UpdateItem></UpdateItem>
       }
     ]
   },
 ]);
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+
+  <QueryClientProvider client={queryClient}>
+   <StrictMode>
     <div className='container mx-auto bg-[#9C27B0]'>
     <RouterProvider router={router} />
     </div>
-  </StrictMode>,
+  </StrictMode>
+    </QueryClientProvider>
+
+
+  ,
 )

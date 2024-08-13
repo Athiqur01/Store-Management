@@ -14,7 +14,7 @@ const InventoryManagement = () => {
                 
                 <Link to='/addItem'><div className="text-3xl md:text-4xl font-bold text-white text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center" style={{ backgroundImage: `url(${addItem})` }}>Add Item</div></Link>
                 
-                <div className="text-3xl md:text-4xl font-bold text-white text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center" style={{ backgroundImage: `url(${updateItem})` }}>Updaye Item</div>
+                <Link to='/updateItem'><div className="text-3xl md:text-4xl font-bold text-white text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center" style={{ backgroundImage: `url(${updateItem})` }}>Updaye Item</div></Link>
             </div>
             
         </section>
