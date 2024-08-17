@@ -10,6 +10,7 @@ import Home from './Component/Home/Home';
 import AddItem from './Component/AddItem/AddItem';
 import UpdateItem from './Component/UpdateItem/UpdateItem';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Requisition from './Component/Requisition/Requisition';
 
 
 const queryClient = new QueryClient()
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path:'/updateItem',
         element:<UpdateItem></UpdateItem>
+      },
+      {
+        path:'/requisition',
+        element:<Requisition></Requisition>
       }
     ]
   },

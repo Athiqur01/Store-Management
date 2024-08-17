@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 
 const AddItem = () => {
@@ -22,8 +23,30 @@ const AddItem = () => {
         
         const item={itemName, description, catagory, quantity, entryDate, storeLocation
         }
-
+       // post operation in items----
         axios.post('http://localhost:5012/addItem',item)
+        .then(res=>{
+            if(res.data){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Item added successfully",
+                    showConfirmButton: false,
+                    timer: 2500
+                  });
+            }
+        })
+
+        // Post operation in srb
+
+        axios.post('http://localhost:5012/srb',item)
+        .then(res=>{
+            console.log(res)
+        })
+       
+        // Post operation in ledger
+
+        axios.post('http://localhost:5012/ledger',item)
         .then(res=>{
             console.log(res)
         })
