@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Demand from "../Demand/Demand";
 
@@ -11,21 +11,30 @@ const Requisition = () => {
     //const [formData, setFormData] = useState({});
 
     const [inputData, setInputData]=useState({})
+    const [colorData, setColorData]=useState({})
     const [isNum, setIsNum]=useState(true)
     const [colorId, setColorId]=useState(false)
     const [itemId, setItemId]=useState(null)
 
 
     const handleInputData=(e,id,index)=>{
-    const  demand=inputData[id]?.demand 
+    
     const colorId=document.getElementById(`id${index}`)
     console.log('colorId',colorId)
       if(isNaN(parseInt (e.target.value))){
         setInputData('')  
         console.log('Insert a valid data')
         setIsNum(false)
-        setColorId(true)
+        setColorId(colorId)
         colorId.classList.add('bg-red-500')
+        setColorData({
+          ...colorData,
+              [id]: {
+                  ...colorData[id],
+                  [e.target.name]: e.target.value
+                  
+            }
+        })
       }
 
       else{
@@ -37,13 +46,22 @@ const Requisition = () => {
                   
             }
         })
-        setIsNum(true)
-        setColorId(false)
-        colorId.classList.remove('bg-red-500')
-      }
-      setItemId(id)
-      
 
+        setColorData({
+          ...colorData,
+              [id]: {
+                  ...colorData[id],
+                  [e.target.name]: e.target.value
+                  
+            }
+        })
+        setIsNum(true)
+        setColorId(colorId)
+        colorId.classList.remove('bg-red-500')
+        setItemId(id)
+      }
+      
+      
       
       // if(e.target.name==='demand'){
       //   console.log('demand value',parseInt (e.target.value))
@@ -57,6 +75,30 @@ const Requisition = () => {
       // })
     }
 
+      useEffect(()=>{
+        const demand=colorData[itemId]?.demand
+      const length=colorData[itemId]?.demand?.length 
+      const isNAN=isNaN(parseInt(demand))
+      
+
+      if(length===0){
+        colorId.classList.add('bg-white')
+        colorId.classList.remove('bg-red-500')
+      }
+      
+       else if(length>0 && isNAN===true){
+        
+        colorId.classList.remove('bg-white')
+        colorId.classList.add('bg-red-500')
+      }
+      else if(length>0 && isNAN===false){
+        
+        colorId.classList.remove('bg-red-500')
+        colorId.classList.add('bg-white')
+      }
+
+      },[length,colorData,itemId])
+     
     
       
     
@@ -145,7 +187,7 @@ const Requisition = () => {
            <th className="">{index+1}</th>
            <td>{item.itemName}</td>
            <td>{item.quantity}</td>
-           <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className='bg-white min-w-10 max-w-14 text-black rounded-sm '  /> </td>
+           <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
            <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
            

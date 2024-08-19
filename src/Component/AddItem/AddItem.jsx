@@ -20,8 +20,12 @@ const AddItem = () => {
         const quantity= itemInfo?.quantity
         const entryDate=itemInfo?.entryDate
         const storeLocation=itemInfo?.storeLocation
+        const requisitedBy=''
+        const storePassedBy=''
+        const approvedBy=''
+        const stage='one'
         
-        const item={itemName, description, catagory, quantity, entryDate, storeLocation
+        const item={itemName, description, catagory, quantity, entryDate, storeLocation,requisitedBy,storePassedBy,approvedBy,stage
         }
        // post operation in items----
         axios.post('http://localhost:5012/addItem',item)

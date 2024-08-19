@@ -13,8 +13,19 @@ const Demand = () => {
         }
     })
           console.log('requisition',requisiteData)
-
-        
+    
+    // Post Operation to send data to store keeper
+    const requisitionBy='monsur'
+    const handleStoreKeeper=()=>{
+        axios.post('http://localhost:5012/storeKeeper',{requisiteData, requisitionBy})
+        .then(res=>
+            console.log(res.data)
+            
+        )
+            
+    }
+    
+    
 
         
       
@@ -47,6 +58,8 @@ const Demand = () => {
 
 </tbody>
 </table>
+
+     <button onClick={handleStoreKeeper} className=" font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50]">Send To Store Keeper</button>
       </div>
     );
 };

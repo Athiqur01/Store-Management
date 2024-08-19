@@ -6,7 +6,7 @@ const Navbar = () => {
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Home</NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Requisition</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Request</NavLink>
+                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Request</NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Search</NavLink>
                     
                   </>
