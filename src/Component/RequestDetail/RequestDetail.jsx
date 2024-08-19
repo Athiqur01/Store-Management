@@ -1,21 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 
 const RequestDetail = () => {
-    const {id}=useParams()
-    console.log(id,'iddd')
-    //fatch data using 
-    const {data:detailData}=useQuery({
-        queryKey:['detailData'],
-        queryFn:async()=>{
-            const res=await axios.get(`http://localhost:5012/storeKeeper?id=${id}`)
-            return res.data
-        }
-    })
+    const [loading, setLoading] = useState(false);
+    const { id } = useParams();
 
-console.log('view detail',detailData)
+    // Fetch data using useQuery
+    const { data: detailData } = useQuery({
+        queryKey: ['detailData', id],
+        queryFn: async () => {
+            const res = await axios.get(`http://localhost:5012/storeKeeper?id=${id}`);
+            return res.data;
+        }
+    });
+
+    // Check if detailData is defined and is an array
+    if (!detailData || !Array.isArray(detailData)) {
+        return <div>Loading or no data available...</div>;
+    }
+
+    // Assuming the first item in detailData contains the requisiteData array
+    const dataaa = detailData[0];
+    const view = dataaa?.requisiteData;
+
+    console.log('view detail', view);
    
 
     return (
@@ -38,14 +49,36 @@ console.log('view detail',detailData)
                  <tbody>
         
                 {/* row  */}
+            {/* {
+                detailData?.map(retrivedData=><>
+                <ul>
+                    {
+                        retrivedData?.map((item,index)=><>
+                            <tr className="lg:text-xl text-white  text-center">
+                            <th className="">{index+1}</th>
+                            <td>{item?.itemName}</td>
+                            <td>{item?.quantity}</td>
+                            <td className="flex text-center flex justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+                            <td><p className="max-w-16 max-h-7 text-white text-center  ">{item?.purpose}</p></td>
+                            
+                            
+                            </tr>
+                          </>)
+                    }
+                </ul>
+                </>)
+            } */}
+
+
+
             {
-            detailData[0]?.requisiteData?.map((item,index)=><>
+            view?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
-           <td>{item.itemName}</td>
-           <td>{item.quantity}</td>
+           <td>{item?.itemName}</td>
+           <td>{item?.quantity}</td>
            <td className="flex text-center flex justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
-           <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           <td><p className="max-w-16 max-h-7 text-white text-center  ">{item?.purpose}</p></td>
            
            
            </tr>
