@@ -101,7 +101,7 @@ const Requisition = () => {
      
     
       
-    
+    //
    
     const handleSendData=(item)=>{
       console.log('item', item)
@@ -136,7 +136,9 @@ const Requisition = () => {
     })
     console.log('items:',items)
 
-    
+    if(!items){
+      return <p>Data is loading------</p>
+    }
 
 
 

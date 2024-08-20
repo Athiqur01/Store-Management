@@ -16,8 +16,9 @@ const Demand = () => {
     
     // Post Operation to send data to store keeper
     const requisitionBy='monsur'
+    const isChecked=false
     const handleStoreKeeper=()=>{
-        axios.post('http://localhost:5012/storeKeeper',{requisiteData, requisitionBy})
+        axios.post('http://localhost:5012/storeKeeper',{requisiteData, requisitionBy,isChecked})
         .then(res=>
             console.log(res.data)
             
