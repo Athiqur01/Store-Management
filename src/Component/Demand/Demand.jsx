@@ -1,26 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { removeItem } from "localforage";
 
 
 const Demand = () => {
 
-    const {data:requisiteData, refetch}=useQuery({
-        queryKey:['requisiteData'],
-        queryFn:async()=>{
-            const res=await axios.get('http://localhost:5012/requisitedata')
-            refetch
-            return res.data
-        }
-    })
-          console.log('requisition',requisiteData)
+    const LocalStorageItem= JSON.parse(localStorage?.getItem('localData')) || []
+
+
+
+    // const {data:requisiteData, refetch}=useQuery({
+    //     queryKey:['requisiteData'],
+    //     queryFn:async()=>{
+    //         const res=await axios.get('http://localhost:5012/requisitedata')
+    //         refetch
+    //         return res.data
+    //     }
+    // })
+    //       console.log('requisition',requisiteData)
     
     // Post Operation to send data to store keeper
     const requisitionBy='monsur'
     const isChecked=false
     const handleStoreKeeper=()=>{
-        axios.post('http://localhost:5012/storeKeeper',{requisiteData, requisitionBy,isChecked})
-        .then(res=>
+        axios.post('http://localhost:5012/storeKeeper',{LocalStorageItem, requisitionBy,isChecked})
+        .then(res=>{
             console.log(res.data)
+            if(res.data)
+                localStorage?.removeItem('localData')
+        }
             
         )
             
@@ -48,7 +56,7 @@ const Demand = () => {
 
       {/* row  */}
   {
-  requisiteData?.map((item,index)=><>
+  LocalStorageItem?.map((item,index)=><>
  <tr className="lg:text-xl text-white  text-center">
  <th className="">{index+1}</th>
  <td>{item?.itemName}</td>

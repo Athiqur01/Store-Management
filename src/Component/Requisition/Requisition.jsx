@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Demand from "../Demand/Demand";
+import { removeItem } from "localforage";
 
 
 const Requisition = () => {
@@ -101,28 +102,40 @@ const Requisition = () => {
      
     
       
-    //
+    //LocalStorage data set and get-----
+    const LocalStorageItem= JSON.parse(localStorage?.getItem('localData')) || []
+    
    
     const handleSendData=(item)=>{
+
+    const isExist=LocalStorageItem.some(localItem=>localItem?._id===item?._id )
+    if(!isExist){
+      LocalStorageItem?.push(item)
+      localStorage?.setItem('localData',JSON.stringify(LocalStorageItem) )
+    }
+    //localStorage.removeItem('localdata')
+
+
+
       console.log('item', item)
      const {_id,itemName,catagory,description, entryDate,quantity,storeLocation}=item
      const demand=inputData[item?._id]?.demand
      const purpose=inputData[item?._id]?.purpose
      const demandItemData={itemName,catagory,description, entryDate,quantity,storeLocation,demand,purpose}
      //Post operation in Requisition
-         axios.post(`http://localhost:5012/requisition?q=${itemName}`,demandItemData)
-         .then(res=>{
-             console.log(res)
-             if(res.data){
-              Swal.fire({
-                  position: "top-end",
-                  icon: "success",
-                  title: "Requisition sent to the store keeper",
-                  showConfirmButton: false,
-                  timer: 2500
-                });
-          }
-         })
+        //  axios.post(`http://localhost:5012/requisition?q=${itemName}`,demandItemData)
+        //  .then(res=>{
+        //      console.log(res)
+        //      if(res.data){
+        //       Swal.fire({
+        //           position: "top-end",
+        //           icon: "success",
+        //           title: "Requisition sent to the store keeper",
+        //           showConfirmButton: false,
+        //           timer: 2500
+        //         });
+        //   }
+        //  })
     }
 
     console.log('input data',inputData)
