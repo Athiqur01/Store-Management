@@ -16,10 +16,24 @@ const Requisition = () => {
     const [isNum, setIsNum]=useState(true)
     const [colorId, setColorId]=useState(false)
     const [itemId, setItemId]=useState(null)
+    const [searchTerm, setSearchTerm]=useState('')
+    const [searchItem,setSearchItem]=useState(null)
+
+
+    const handleSearchTerm=(e)=>{
+      setSearchTerm(e.target.value)
+     
+    }
+
+    useEffect(()=>{
+      fetch(`http://localhost:5012/item?q=${searchTerm}`)
+      .then(res=>res.json())
+      .then(data=>setSearchItem(data))
+  }
+  ,[searchTerm])
 
 
     const handleInputData=(e,id,index)=>{
-    
     const colorId=document.getElementById(`id${index}`)
     console.log('colorId',colorId)
       if(isNaN(parseInt (e.target.value))){
@@ -74,14 +88,16 @@ const Requisition = () => {
       //           [e.target.name]: e.target.value
       //     }
       // })
-    }
+    } 
 
-      useEffect(()=>{
-        const demand=colorData[itemId]?.demand
+      const demand=colorData[itemId]?.demand
+      const purpose=colorData[itemId]?.purpose
       const length=colorData[itemId]?.demand?.length 
       const isNAN=isNaN(parseInt(demand))
-      
 
+
+      useEffect(()=>{
+      
       if(length===0){
         colorId.classList.add('bg-white')
         colorId.classList.remove('bg-red-500')
@@ -98,30 +114,30 @@ const Requisition = () => {
         colorId.classList.add('bg-white')
       }
 
-      },[length,colorData,itemId])
+      },[colorData,colorId?.classList,itemId,isNAN,length])
      
     
       
     //LocalStorage data set and get-----
     const LocalStorageItem= JSON.parse(localStorage?.getItem('localData')) || []
+    //const demand2=inputData[itemId]?.demand
     
-   
+    console.log('demand',demand,'purpose',purpose)
     const handleSendData=(item)=>{
-
+    item.demand=demand
+    item.purpose=purpose
+    console.log('item-------',item)
     const isExist=LocalStorageItem.some(localItem=>localItem?._id===item?._id )
     if(!isExist){
       LocalStorageItem?.push(item)
       localStorage?.setItem('localData',JSON.stringify(LocalStorageItem) )
+      
     }
-    //localStorage.removeItem('localdata')
+   
+    
 
 
-
-      console.log('item', item)
-     const {_id,itemName,catagory,description, entryDate,quantity,storeLocation}=item
-     const demand=inputData[item?._id]?.demand
-     const purpose=inputData[item?._id]?.purpose
-     const demandItemData={itemName,catagory,description, entryDate,quantity,storeLocation,demand,purpose}
+      
      //Post operation in Requisition
         //  axios.post(`http://localhost:5012/requisition?q=${itemName}`,demandItemData)
         //  .then(res=>{
@@ -153,6 +169,10 @@ const Requisition = () => {
       return <p>Data is loading------</p>
     }
 
+    //Sreach item-------
+    
+
+console.log('input data',inputData, 'color data', colorData)
 
 
     return (
@@ -164,7 +184,7 @@ const Requisition = () => {
               {/* left side start */}
               <div className="px-2 flex flex-col  w-[100%] md:w-[20%] lg:w-[20%] ">
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Search Item</h2>
-                <input type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " />
+                <input onChange={handleSearchTerm} type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " />
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Item Catagory</h2>
                 <select value="" className="text-lg font-bold text-black bg-white py-2 mb-4 text-center" >
                   <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Computer</option>
@@ -196,19 +216,36 @@ const Requisition = () => {
                  <tbody>
         
                 {/* row  */}
+                
             {
-            items?.map((item,index)=><>
-           <tr className="lg:text-xl text-white  text-center">
-           <th className="">{index+1}</th>
-           <td>{item.itemName}</td>
-           <td>{item.quantity}</td>
-           <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
-           <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
-           <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
-           
-           </tr>
-         </>)
+            searchTerm?.length>0 &&  searchItem?.map((item,index)=><>
+            <tr className="lg:text-xl text-white  text-center">
+            <th className="">{index+1}</th>
+            <td>{item.itemName}</td>
+            <td>{item.quantity}</td>
+            <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
+            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData[item?._id]?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
+            <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
+            
+            </tr>
+          </>)   
       }
+
+{
+            searchTerm?.length==0 &&  items?.map((item,index)=><>
+            <tr className="lg:text-xl text-white  text-center">
+            <th className="">{index+1}</th>
+            <td>{item.itemName}</td>
+            <td>{item.quantity}</td>
+            <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
+            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
+            <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
+            
+            </tr>
+          </>)   
+      }
+
+
       
     </tbody>
   </table>

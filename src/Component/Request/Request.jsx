@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Request = () => {
 
     //get operation to fetch all request from storekeeper
-    const user='re'
+    const user='keeper'
     const isChecked=false
 
     const {data:storeKeeper}=useQuery({

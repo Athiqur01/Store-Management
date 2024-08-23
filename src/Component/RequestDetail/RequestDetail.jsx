@@ -24,7 +24,7 @@ const RequestDetail = () => {
 
     // Assuming the first item in detailData contains the requisiteData array
     const dataaa = detailData[0];
-    const view = dataaa?.requisiteData;
+    const view = dataaa?.LocalStorageItem;
 
     console.log('view detail', view);
    
