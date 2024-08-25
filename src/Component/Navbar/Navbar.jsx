@@ -1,7 +1,24 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 
 const Navbar = () => {
+
+    const {user,logOut}=useContext(AuthContext)
+    
+    //get operation to fetch all request from storekeeper
+    const {data:loggedUser}=useQuery({
+        queryKey:['loggedUser'],
+        queryFn:async()=>{
+          const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
+          return res.data
+        }
+    })
+
+
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Home</NavLink>
@@ -60,8 +77,10 @@ const Navbar = () => {
   {/* Navber End------------ */}
 
   <div className="navbar-end">
-  <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>LogIn</NavLink>
-  <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Register</NavLink>
+    {user? <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'><p>{loggedUser?.name}</p> Logout </button>:
+    <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>LogIn</NavLink>}
+  
+  
   </div>
 </div>
             

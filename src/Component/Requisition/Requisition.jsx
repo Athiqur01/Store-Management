@@ -182,7 +182,7 @@ console.log('input data',inputData, 'color data', colorData)
             <div className="flex flex-col lg:flex-row gap-4 ">
 
               {/* left side start */}
-              <div className="px-2 flex flex-col  w-[100%] md:w-[20%] lg:w-[20%] ">
+              <div className="px-2 flex flex-col mt-0 md:mt-11 lg:mt-11  w-[100%] md:w-[20%] lg:w-[20%] ">
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Search Item</h2>
                 <input onChange={handleSearchTerm} type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " />
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Item Catagory</h2>
@@ -223,8 +223,8 @@ console.log('input data',inputData, 'color data', colorData)
             <th className="">{index+1}</th>
             <td>{item.itemName}</td>
             <td>{item.quantity}</td>
-            <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
-            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData[item?._id]?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
+            <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
+            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData[item?._id]?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm   "></textarea></td>
             <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
             
             </tr>
@@ -237,8 +237,8 @@ console.log('input data',inputData, 'color data', colorData)
             <th className="">{index+1}</th>
             <td>{item.itemName}</td>
             <td>{item.quantity}</td>
-            <td className="flex justify-center"> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
-            <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-16 max-h-7 text-black rounded-sm focus:max-w-40   "></textarea></td>
+            <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-12 text-black text-center rounded-sm '  /> </td>
+            <td className=""><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-12 max-h-5 md:max-h-7 lg:max-h-7 text-black rounded-sm   "></textarea></td>
             <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
             
             </tr>

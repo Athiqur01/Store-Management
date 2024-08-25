@@ -1,7 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
 
 const Demand = () => {
+    const {user,loading}=useContext(AuthContext)
+    
+
+    const {data:loggedUser}=useQuery({
+        queryKey:['loggedUser'],
+        queryFn:async()=>{
+          const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
+          return res.data
+        }
+    })
+
+    const userName=loggedUser?.name
     // State to manage local storage items
     const [localStorageItems, setLocalStorageItems] = useState([]);
 
@@ -36,9 +50,16 @@ const Demand = () => {
         setLocalStorageItems(updatedItems); // Update state to trigger UI update
     };
 
+    //if user does not exist
+    
+    if (!user && !loggedUser) {
+        return <div><span className="loading loading-ring loading-lg text-white text-center"></span></div>;
+    }
+    
+
     // Post Operation to send data to storekeeper
     const handleStoreKeeper = () => {
-        const requisitionBy = 'monsur';
+        const requisitionBy = userName;
         const isChecked = false;
 
         axios.post('http://localhost:5012/storeKeeper', { LocalStorageItem: localStorageItems, requisitionBy, isChecked })
@@ -49,6 +70,8 @@ const Demand = () => {
                 }
             });
     };
+
+    
 
     return (
         <div className="text-white w-[100%] md:w-[20%] lg:w-[20%] px-2 flex flex-col items-center">
@@ -75,6 +98,7 @@ const Demand = () => {
                     ))}
                 </tbody>
             </table>
+            
             <button onClick={handleStoreKeeper} className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50]">Send To Store Keeper</button>
         </div>
     );

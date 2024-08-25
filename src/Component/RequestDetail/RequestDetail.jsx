@@ -1,32 +1,99 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 
 const RequestDetail = () => {
     const [loading, setLoading] = useState(false);
     const { id } = useParams();
+    console.log('iddddddd---',id)
+
+    //user Status-----
+    const {user}=useContext(AuthContext)
+
+    
+
+    const {data:loggedUser}=useQuery({
+        queryKey:['loggedUser',user?.email],
+        queryFn:async()=>{
+          const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
+          return res.data
+        },
+    enabled: !!(user?.email),
+    retry: 2,
+    refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
+    refetchOnMount: true, // Ensure data is fetched every time the component mounts
+    staleTime: 0, // Disable caching to always fetch fresh data
+        
+    })
+    console.log('logged user',loggedUser?.status)
+    const userStatus=loggedUser?.status
 
     // Fetch data using useQuery
-    const { data: detailData } = useQuery({
-        queryKey: ['detailData', id],
+    // Fetch data using useQuery in object form
+    const { data: detailData, isLoading, error } = useQuery({
+        queryKey: ['detailData', id], // Unique key for the query
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5012/storeKeeper?id=${id}`);
+            const res = await axios.get(`http://localhost:5012/storeKeepers/${id}`);
             return res.data;
-        }
+        },
+    enabled: !!id,
+    retry: 2,
+    refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
+    refetchOnMount: true, // Ensure data is fetched every time the component mounts
+    staleTime: 0, // Disable caching to always fetch fresh data
     });
 
-    // Check if detailData is defined and is an array
-    if (!detailData || !Array.isArray(detailData)) {
-        return <div>Loading or no data available...</div>;
+    // Handling loading state
+    if (isLoading) {
+        return <div>Loading...</div>;
     }
+
+    // Handling error state
+    if (error) {
+        return <div>Error fetching data: {error.message}</div>;
+    }
+
+    // Check if detailData is defined and is an array
+    if (!detailData || detailData.length === 0 || !loggedUser) {
+        return <div><span className="loading loading-dots loading-lg"></span></div>;
+    }
+    
+    
+    // Send to Re----
+    const handleSendToRE=(id)=>{
+        const keeperHidden=document.getElementById('kepper-hidden')
+        const keeperButton=document.getElementById('keeper-button')
+        
+        console.log('keeperHidden', keeperButton)
+         const isChecked=true
+         console.log('isChecked2',isChecked)
+         axios.patch(`http://localhost:5012/keeper/${id}`,{isChecked})
+         .then(res=>{
+         console.log(res)
+ 
+      })
+
+    keeperHidden.classList.add('hidden')
+        keeperButton.classList.add('hidden')
+     
+    }
+
+    
+
 
     // Assuming the first item in detailData contains the requisiteData array
     const dataaa = detailData[0];
     const view = dataaa?.LocalStorageItem;
+    const isChecked=dataaa?.isChecked
+    console.log('isChecked',isChecked)
+    
+    
+    
 
-    console.log('view detail', view);
+   
    
 
     return (
@@ -46,49 +113,61 @@ const RequestDetail = () => {
                  </tr>
                  </thead>
 
-                 <tbody>
+                 <tbody id="kepper-hidden">
         
-                {/* row  */}
-            {/* {
-                detailData?.map(retrivedData=><>
-                <ul>
-                    {
-                        retrivedData?.map((item,index)=><>
-                            <tr className="lg:text-xl text-white  text-center">
-                            <th className="">{index+1}</th>
-                            <td>{item?.itemName}</td>
-                            <td>{item?.quantity}</td>
-                            <td className="flex text-center flex justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
-                            <td><p className="max-w-16 max-h-7 text-white text-center  ">{item?.purpose}</p></td>
-                            
-                            
-                            </tr>
-                          </>)
-                    }
-                </ul>
-                </>)
-            } */}
-
-
-
+    {/* if user status is keeper and is checked is false */}           
             {
-            view?.map((item,index)=><>
+           view?.map((item,index)=><>
+           {!isChecked && userStatus==='keeper' && <tr className="lg:text-xl text-white  text-center">
+           <th className="">{index+1}</th>
+           <td>{item?.itemName}</td>
+           <td>{item?.quantity}</td>
+           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           
+           
+           </tr>}
+         </>)
+      }
+{/* if user status is admin and is checked is true */}
+
+{
+           view?.map((item,index)=><>
+           {isChecked && userStatus==='admin' && <tr className="lg:text-xl text-white  text-center">
+           <th className="">{index+1}</th>
+           <td>{item?.itemName}</td>
+           <td>{item?.quantity}</td>
+           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <input className="bg-white min-w-10 max-w-14 text-center text-black" value={item?.demand} readOnly />  <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           
+           
+           </tr>}
+         </>)
+      }
+
+
+{/* {
+          !isChecked && userRole==='keeper' &&  view?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
            <td>{item?.itemName}</td>
            <td>{item?.quantity}</td>
-           <td className="flex text-center flex justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
-           <td><p className="max-w-16 max-h-7 text-white text-center  ">{item?.purpose}</p></td>
+           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
            
            
            </tr>
          </>)
-      }
+      } */}
       
     </tbody>
   </table>
-  <div className="flex justify-center"><button className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Send To RE</button></div>
-                </div>
+  <div className="flex justify-center">
+    {!isChecked && userStatus==='keeper' && <button id="keeper-button" onClick={()=>handleSendToRE(id)} className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Send To RE</button>}
+
+    {isChecked && userStatus==='admin' && <button  className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Approve Request</button>}
+  </div>
+ </div>
                 
         </div>
                 
