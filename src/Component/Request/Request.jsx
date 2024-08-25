@@ -13,7 +13,12 @@ const Request = () => {
         queryFn:async()=>{
           const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
           return res.data
-        }
+        },
+        enabled: !!(user?.email),
+        retry: 2,
+        refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
+        refetchOnMount: true, // Ensure data is fetched every time the component mounts
+        staleTime: 0, // Disable caching to always fetch fresh data
     })
     console.log('logged user',loggedUser?.status)
     const userStatus=loggedUser?.status
@@ -50,7 +55,13 @@ const Request = () => {
     console.log('keeperData',keeperData)
 
 
+if(!keeperData ){
+  return <p>Data is loading-----</p>
+}
 
+if(!loggedUser){
+  return <p>Data is loading-----</p>
+}
 
      //const keeperItem=storeKeeper?.filter(i=>i?.isChecked===false)
 

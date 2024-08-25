@@ -9,15 +9,23 @@ const Navbar = () => {
 
     const {user,logOut}=useContext(AuthContext)
     
-    //get operation to fetch all request from storekeeper
+    //get operation to fetch user
     const {data:loggedUser}=useQuery({
         queryKey:['loggedUser'],
         queryFn:async()=>{
           const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
           return res.data
-        }
+        },
+        enabled: !!(user?.email),
+        retry: 2,
+        refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
+        refetchOnMount: true, // Ensure data is fetched every time the component mounts
+        staleTime: 0, // Disable caching to always fetch fresh data
     })
 
+if(!(user?.email)){
+  return <p>loading---</p>
+}
 
 
     const NavLinkcenter=<>

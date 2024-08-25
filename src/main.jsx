@@ -31,7 +31,8 @@ const router = createBrowserRouter([
       },
       {
         path:'/addItem',
-        element:<AddItem></AddItem>
+        element:<AddItem></AddItem>,
+        
       },
       {
         path:'/updateItem',

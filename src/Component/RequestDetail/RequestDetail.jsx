@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 
 const RequestDetail = () => {
     const [loading, setLoading] = useState(false);
+    const [demandState, setDemandState]=useState()
     const { id } = useParams();
     console.log('iddddddd---',id)
 
@@ -26,8 +27,9 @@ const RequestDetail = () => {
     refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
     refetchOnMount: true, // Ensure data is fetched every time the component mounts
     staleTime: 0, // Disable caching to always fetch fresh data
-        
+    
     })
+    
     console.log('logged user',loggedUser?.status)
     const userStatus=loggedUser?.status
 
@@ -44,7 +46,62 @@ const RequestDetail = () => {
     refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
     refetchOnMount: true, // Ensure data is fetched every time the component mounts
     staleTime: 0, // Disable caching to always fetch fresh data
+    
     });
+
+    // useEffect to update demandState when detailData changes
+    useEffect(() => {
+      if (detailData && Array.isArray(detailData[0]?.LocalStorageItem)) {
+        const initialDemandState = detailData[0]?.LocalStorageItem?.reduce((acc, item) => {
+          if (item?._id) { // Ensure item._id is defined
+            acc[item?._id] = parseInt(item?.demand, 10) || 0; // Default to 0 if demand is undefined
+          }
+          return acc;
+        }, {});
+        setDemandState(initialDemandState);
+      }
+    }, [detailData]);
+  console.log('demand Data state',demandState)
+
+  //Handle Increase----
+   const handleIncrease=(itemId)=>{
+    
+    setDemandState((prevState)=>{
+      const newDemand=prevState[itemId]+1
+      updateDemandInBackend(itemId, newDemand);
+      console.log('newDemand',newDemand)
+      return {
+        ...prevState,
+        [itemId]:newDemand
+      }
+    })
+   }
+   // Dandle Decrease------
+   const handleDecrease=(itemId)=>{
+      setDemandState((prevState)=>{
+      const newDemand=Math.max(prevState[itemId]-1,0)
+      updateDemandInBackend(itemId, newDemand);
+      return {
+        ...prevState,
+        [itemId]:newDemand
+      }
+    })
+   }
+console.log('demandState---',demandState)
+
+ // Function to update demand in the backend
+ const updateDemandInBackend = (itemId, newDemand) => {
+  axios.patch(`http://localhost:5012/storeKeeper/${id}/item/${itemId}`, {
+      demand: newDemand
+  })
+  .then(res => {
+      console.log("Demand updated:", res.data);
+  })
+  .catch(err => {
+      console.error("Error updating demand:", err);
+  });
+};
+
 
     // Handling loading state
     if (isLoading) {
@@ -57,8 +114,12 @@ const RequestDetail = () => {
     }
 
     // Check if detailData is defined and is an array
-    if (!detailData || detailData.length === 0 || !loggedUser) {
+    if (!detailData || detailData?.length === 0  ) {
         return <div><span className="loading loading-dots loading-lg"></span></div>;
+    }
+
+    if(!loggedUser){
+      return <div><span className="loading loading-dots loading-lg"></span></div>
     }
     
     
@@ -90,7 +151,9 @@ const RequestDetail = () => {
     const isChecked=dataaa?.isChecked
     console.log('isChecked',isChecked)
     
-    
+    if(!view){
+      return <p>data is loading----</p>
+    }
     
 
    
@@ -122,7 +185,7 @@ const RequestDetail = () => {
            <th className="">{index+1}</th>
            <td>{item?.itemName}</td>
            <td>{item?.quantity}</td>
-           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button  className="bg-[#7C4DFF] px-3 w-10">+</button></td>
            <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
            
            
@@ -137,7 +200,7 @@ const RequestDetail = () => {
            <th className="">{index+1}</th>
            <td>{item?.itemName}</td>
            <td>{item?.quantity}</td>
-           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <input className="bg-white min-w-10 max-w-14 text-center text-black" value={item?.demand} readOnly />  <button className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td className="flex text-center justify-center"><button onClick={()=>handleDecrease(item?._id)} className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <input className="bg-white min-w-10 max-w-14 text-center text-black" value={demandState?.[item?._id] || 0} readOnly />  <button onClick={()=>handleIncrease(item?._id)} className="bg-[#7C4DFF] px-3 w-10">+</button></td>
            <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
            
            
