@@ -1,181 +1,176 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+app.get('/storeKeepers/:id', async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: new ObjectId(id) };
 
-const RequestDetail = () => {
-    const { id } = useParams();
-    const { user } = useContext(AuthContext);
+    try {
+        // Find the storeKeeper document by ID
+        const storeKeeper = await storeKeeperCollection.findOne(filter);
 
-    // Local state to manage the demand for each item
-    const [demandState, setDemandState] = useState({});
-
-    // Fetch the logged-in user data
-    const { data: loggedUser } = useQuery({
-        queryKey: ['loggedUser', user?.email],
-        queryFn: async () => {
-            const res = await axios.get(`http://localhost:5012/user?email=${user?.email}`);
-            return res.data;
-        },
-        enabled: !!(user?.email),
-        retry: 2,
-        refetchOnWindowFocus: true,
-        refetchOnMount: true,
-        staleTime: 0,
-    });
-
-    const userStatus = loggedUser?.status;
-
-    // Fetch the detail data
-    const { data: detailData, isLoading, error } = useQuery({
-        queryKey: ['detailData', id],
-        queryFn: async () => {
-            const res = await axios.get(`http://localhost:5012/storeKeepers/${id}`);
-            return res.data;
-        },
-        enabled: !!id,
-        retry: 2,
-        refetchOnWindowFocus: true,
-        refetchOnMount: true,
-        staleTime: 0,
-        onSuccess: (data) => {
-            const initialDemandState = data?.LocalStorageItem.reduce((acc, item) => {
-                acc[item._id] = parseInt(item.demand);
-                return acc;
-            }, {});
-            setDemandState(initialDemandState || {});
+        if (!storeKeeper) {
+            return res.status(404).send({ message: 'StoreKeeper not found' });
         }
+
+        // Extract the item IDs from LocalStorageItem array
+        const itemIds = storeKeeper.LocalStorageItem.map(item => new ObjectId(item._id));
+
+        // Find the corresponding items in itemsCollection
+        const items = await itemsCollection.find({ _id: { $in: itemIds } }).toArray();
+
+        // Merge the item details with the storeKeeper data
+        const detailedItems = storeKeeper.LocalStorageItem.map(localItem => {
+            const fullItemDetails = items.find(item => item._id.toString() === localItem._id);
+            return {
+                ...localItem,
+                fullItemDetails
+            };
+        });
+
+        // Attach the detailed items to the storeKeeper object
+        storeKeeper.LocalStorageItem = detailedItems;
+
+        res.send(storeKeeper);
+    } catch (error) {
+        console.error('Error fetching store keeper:', error);
+        res.status(500).send({ message: 'Failed to fetch store keeper data', error });
+    }
+});
+Explanation:
+Find the storeKeeper document: First, you find the document in the storeKeeperCollection using the ID from the route parameter.
+
+Extract item IDs: You then extract the _id fields from the LocalStorageItem array.
+
+Query itemsCollection: With these IDs, you query the itemsCollection to retrieve the full details of each item.
+
+Merge data: The code merges the item details with the corresponding LocalStorageItem details.
+
+Frontend Code Adjustments
+Since your backend now sends the full item details in the LocalStorageItem array, you can access those details directly in the frontend.
+
+javascript
+Copy code
+const { data: detailData, isLoading, error } = useQuery({
+    queryKey: ['detailData', id],
+    queryFn: async () => {
+        const res = await axios.get(`http://localhost:5012/storeKeepers/${id}`);
+        return res.data;
+    },
+    enabled: !!id,
+    retry: 2,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,
+});
+
+useEffect(() => {
+    if (detailData && Array.isArray(detailData.LocalStorageItem)) {
+        const initialDemandState = detailData.LocalStorageItem.reduce((acc, item) => {
+            if (item?._id) {
+                acc[item._id] = parseInt(item.demand, 10) || 0;
+            }
+            return acc;
+        }, {});
+        setDemandState(initialDemandState);
+    }
+}, [detailData]);
+
+// When rendering items, now you can access additional details:
+{detailData?.LocalStorageItem.map((item, index) => (
+    <tr key={item._id} className="lg:text-xl text-white text-center">
+        <th>{index + 1}</th>
+        <td>{item.fullItemDetails.itemName}</td>
+        <td>{item.fullItemDetails.quantity}</td>
+        <td className="flex text-center justify-center">
+            <button onClick={() => handleDecrease(item._id)} className="text-xl bg-[#7C4DFF] px-3 w-10">-</button>
+            <input className="bg-white min-w-10 max-w-14 text-center text-black" value={demandState[item._id] || 0} readOnly />
+            <button onClick={() => handleIncrease(item._id)} className="bg-[#7C4DFF] px-3 w-10">+</button>
+        </td>
+        <td><p className="text-white text-center">{item.purpose}</p></td>
+    </tr>
+))}
+
+
+
+
+
+
+const express = require('express');
+const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
+
+const app = express();
+const port = process.env.PORT || 5012;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mnncxar.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+async function run() {
+  try {
+    await client.connect();
+
+    const itemsCollection = client.db("MymensinghBetar").collection('Items');
+    const storeKeeperCollection = client.db("MymensinghBetar").collection('StoreKeeper');
+
+    // Endpoint to update the quantity in LocalStorageItem with the quantity from Items collection
+    app.patch('/updateLocalStorageQuantities/:storeKeeperId', async (req, res) => {
+      try {
+        const { storeKeeperId } = req.params;
+
+        // Find the specific StoreKeeper document
+        const storeKeeper = await storeKeeperCollection.findOne({ _id: new ObjectId(storeKeeperId) });
+
+        if (!storeKeeper || !storeKeeper.LocalStorageItem) {
+          return res.status(404).send({ error: 'StoreKeeper or LocalStorageItem not found' });
+        }
+
+        // Loop through each LocalStorageItem and update its quantity
+        const updatedItems = await Promise.all(
+          storeKeeper.LocalStorageItem.map(async (item) => {
+            const itemFromDb = await itemsCollection.findOne({ _id: new ObjectId(item._id) });
+            if (itemFromDb) {
+              item.quantity = itemFromDb.quantity; // Replace quantity with the one from Items collection
+            }
+            return item;
+          })
+        );
+
+        // Update the StoreKeeper document with the modified LocalStorageItem array
+        const updateResult = await storeKeeperCollection.updateOne(
+          { _id: new ObjectId(storeKeeperId) },
+          { $set: { LocalStorageItem: updatedItems } }
+        );
+
+        res.send({ message: 'Quantities updated successfully', updateResult });
+      } catch (err) {
+        console.error('Error updating quantities:', err);
+        res.status(500).send({ error: 'Failed to update quantities' });
+      }
     });
 
-    // Handling loading state
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    // Ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Connected to MongoDB!");
+  } finally {
+    // Keep the client connected for now
+  }
+}
 
-    // Handling error state
-    if (error) {
-        return <div>Error fetching data: {error.message}</div>;
-    }
+run().catch(console.dir);
 
-    // Check if detailData is defined
-    if (!detailData || !loggedUser) {
-        return <div><span className="loading loading-dots loading-lg"></span></div>;
-    }
+app.get('/', (req, res) => {
+  res.send('Store management is running');
+});
 
-    // Function to handle increase in demand
-    const handleIncrease = (itemId) => {
-        setDemandState((prevState) => {
-            const newDemand = prevState[itemId] + 1;
-            updateDemandInBackend(itemId, newDemand);
-            return {
-                ...prevState,
-                [itemId]: newDemand,
-            };
-        });
-    };
-
-    // Function to handle decrease in demand
-    const handleDecrease = (itemId) => {
-        setDemandState((prevState) => {
-            const newDemand = Math.max(prevState[itemId] - 1, 0);
-            updateDemandInBackend(itemId, newDemand);
-            return {
-                ...prevState,
-                [itemId]: newDemand,
-            };
-        });
-    };
-
-    // Function to update demand in the backend
-    const updateDemandInBackend = (itemId, newDemand) => {
-        axios.patch(`http://localhost:5012/storeKeepers/${id}/items/${itemId}`, {
-            demand: newDemand
-        })
-        .then(res => {
-            console.log("Demand updated:", res.data);
-        })
-        .catch(err => {
-            console.error("Error updating demand:", err);
-        });
-    };
-
-    // Send to RE function
-    const handleSendToRE = () => {
-        axios.patch(`http://localhost:5012/keeper/${id}`, { isChecked: true })
-            .then(res => {
-                console.log(res);
-            });
-
-        document.getElementById('kepper-hidden').classList.add('hidden');
-        document.getElementById('keeper-button').classList.add('hidden');
-    };
-
-    const view = detailData?.LocalStorageItem;
-    const isChecked = detailData?.isChecked;
-
-    return (
-        <div className="flex flex-col justify-center">
-            <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8">All Items</h2>
-                <table className="table">
-                    <thead>
-                        <tr className="text-sm md:text-base font-bold text-white text-center">
-                            <th>#</th>
-                            <th>Item Name</th>
-                            <th>Stock</th>
-                            <th>Demand</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-                    <tbody id="kepper-hidden">
-                        {view?.map((item, index) => (
-                            !isChecked && userStatus === 'keeper' && (
-                                <tr key={item._id} className="lg:text-xl text-white text-center">
-                                    <th>{index + 1}</th>
-                                    <td>{item?.itemName}</td>
-                                    <td>{item?.quantity}</td>
-                                    <td className="flex text-center justify-center">
-                                        <button
-                                            onClick={() => handleDecrease(item._id)}
-                                            className="text-xl bg-[#7C4DFF] px-3 w-10"
-                                        >
-                                            -
-                                        </button>
-                                        <input
-                                            className="bg-white min-w-10 max-w-14 text-center text-black"
-                                            value={demandState[item._id]}
-                                            readOnly
-                                        />
-                                        <button
-                                            onClick={() => handleIncrease(item._id)}
-                                            className="bg-[#7C4DFF] px-3 w-10"
-                                        >
-                                            +
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <p className="text-white text-center">{item?.purpose}</p>
-                                    </td>
-                                </tr>
-                            )
-                        ))}
-                    </tbody>
-                </table>
-                <div className="flex justify-center">
-                    {!isChecked && userStatus === 'keeper' && (
-                        <button
-                            id="keeper-button"
-                            onClick={handleSendToRE}
-                            className="px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]"
-                        >
-                            Send To RE
-                        </button>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export default RequestDetail;
+app.listen(port, () => {
+  console.log(`Store management is running on port ${port}`);
+});

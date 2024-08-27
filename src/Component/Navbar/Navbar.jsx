@@ -23,14 +23,14 @@ const Navbar = () => {
         staleTime: 0, // Disable caching to always fetch fresh data
     })
 
-if(!(user?.email)){
-  return <p>loading---</p>
-}
+// if(!(user?.email)){
+//   return <p>loading---</p>
+// }
 
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Home</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Requisition</NavLink>
+                    <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Requisition</NavLink>
                     <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Request</NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>Search</NavLink>
                     

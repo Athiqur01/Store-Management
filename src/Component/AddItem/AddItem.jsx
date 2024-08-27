@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
-import { useLoaderData } from "react-router-dom";
+
 
 
 const AddItem = () => {
@@ -27,7 +27,7 @@ const AddItem = () => {
     })
 
     //count item from item collection to set ledger serial no
-    const {data:ledgerSerial}=useQuery({
+    const {data:ledgerSerial, refetch}=useQuery({
         queryKey:['ledgerSerial'],
         queryFn:async ()=>{
             const res=await axios.get('http://localhost:5012/count')
@@ -42,6 +42,7 @@ const AddItem = () => {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
       } = useForm();
 
       const onSubmit = (itemInfo) => {
@@ -49,50 +50,80 @@ const AddItem = () => {
         const description=itemInfo?.description
         const catagory= itemInfo?.category
         const quantity= itemInfo?.quantity
-        const entryDate= new Date().toISOString().split('T')[0];
+        const balance= itemInfo?.quantity
         const storeLocation=itemInfo?.storeLocation
-        const requisitedBy=loggedUser?.name || ''
-        const storePassedBy=''
-        const approvedBy=''
-        const stage='one'
+        const addedBy=loggedUser?.name || ''
         
-        const item={itemName, description, catagory, quantity, storeLocation,requisitedBy,storePassedBy,approvedBy,stage
+        const ledgerSerialNo=parseInt(ledgerSerial?.totalItems)+1
+        const entryDate= new Date().toISOString().split('T')[0];
+        
+        const item={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
         }
-        console.log(item)
-       // post operation in items----
-        // axios.post('http://localhost:5012/addItem',item)
-        // .then(res=>{
-        //     if(res.data){
-        //         Swal.fire({
-        //             position: "top-end",
-        //             icon: "success",
-        //             title: "Item added successfully",
-        //             showConfirmButton: false,
-        //             timer: 2500
-        //           });
-        //     }
-        // })
+
+        const itemSrb={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
+        }
+        const itemLedger={itemName, description, catagory, balance, storeLocation,ledgerSerialNo,addedBy,entryDate
+        }
+        console.log('ledger',itemLedger)
+        
+      //  post operation in items collection----
+        axios.post('http://localhost:5012/addItem',item)
+        .then(res=>{
+            if(res.data){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Item added successfully",
+                    showConfirmButton: false,
+                    timer: 2500
+                  });
+                  refetch()
+            }
+        })
+
 
         // Post operation in srb
+        axios.post('http://localhost:5012/srb',itemSrb)
+        .then(res=>{
+          if(res.data){
+            console.log(res)
+            refetch()
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Item not Added to Srb!", 
+            });
+          }
+            
+        })
 
-        // axios.post('http://localhost:5012/srb',item)
-        // .then(res=>{
-        //     console.log(res)
-        // })
        
         // Post operation in ledger
-
-        // axios.post('http://localhost:5012/ledger',item)
-        // .then(res=>{
-        //     console.log(res)
-        // })
-       
-       
+        axios.post('http://localhost:5012/ledger',itemLedger)
+        .then(res=>{
+          if(res.data){
+            console.log(res)
+            reset()
+            refetch()
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Item not Added to Srb!", 
+            });
+          }
+        }) 
       }
 
-      if(!loggedUser){
+
+      if(!loggedUser || !ledgerSerial){
         return <div className="flex justify-center"><span className="loading loading-ring loading-lg"></span></div>
-    }
+       }
+
+
     
 
 
@@ -102,8 +133,10 @@ const AddItem = () => {
             <h2 className="text-white text-3xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10">Add Item</h2>
             <div className="border-white border-2 rounded-md mx-2">
                 <form  onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 p-10 "   >
+                <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Name</label>
                 <input type="text"  {...register("itemName", { required: true })} placeholder="Item Name" className="input input-bordered text-black w-full " required />
-                <textarea   id="" {...register("description", { required: true })} placeholder="Item's Description" className="w-full rounded-lg h-16 p-4 text-black"></textarea>
+                
+                <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Catagory</label>
                  <Controller
             name="category"
             control={control}
@@ -120,8 +153,9 @@ const AddItem = () => {
             )}
           />
           {errors.category && <p className="text-red-500">{errors.category.message}</p>}
+                <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Quantity</label>
                 <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full " />
-                
+                <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Store Name</label>
                 <Controller
                       name="storeLocation"
                       control={control}
@@ -136,8 +170,11 @@ const AddItem = () => {
                       )}
                     />
                     {errors.storeLocation && <p className="text-red-500">{errors.storeLocation.message}</p>}
+
+                    <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Description</label>
+                <textarea   id="" {...register("description", { required: true })} placeholder=" Description like brand, model etc." className="w-full rounded-lg h-16 p-4 text-black"></textarea>
                         
-                <button type="submit" className='px-4 py-2 bg-[#487DF0] rounded-md  border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Save Item</button>
+                <button type="submit" className='px-4 py-2 bg-[#03A9F4] text-white rounded-md  border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Save Item</button>
                 </form>
                 </div>
         </section>

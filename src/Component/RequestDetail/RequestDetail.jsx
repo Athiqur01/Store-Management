@@ -6,13 +6,18 @@ import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 
 const RequestDetail = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [demandState, setDemandState]=useState()
+    const [ids,setIds]=useState()
+    const [stockState, setStockState]=useState()
     const { id } = useParams();
     console.log('iddddddd---',id)
 
     //user Status-----
     const {user}=useContext(AuthContext)
+
+    // const ids=Object.keys(demandState)
+    // console.log('idsss',ids)
 
     
 
@@ -33,6 +38,17 @@ const RequestDetail = () => {
     console.log('logged user',loggedUser?.status)
     const userStatus=loggedUser?.status
 
+    // count sib number----
+    const {data:sibSerial, refetch}=useQuery({
+      queryKey:['sibSerial'],
+      queryFn:async ()=>{
+          const res=await axios.get('http://localhost:5012/sib/count')
+          console.log(res.data)
+          return res.data
+          
+      }
+  })
+
     // Fetch data using useQuery
     // Fetch data using useQuery in object form
     const { data: detailData, isLoading, error } = useQuery({
@@ -51,8 +67,8 @@ const RequestDetail = () => {
 
     // useEffect to update demandState when detailData changes
     useEffect(() => {
-      if (detailData && Array.isArray(detailData[0]?.LocalStorageItem)) {
-        const initialDemandState = detailData[0]?.LocalStorageItem?.reduce((acc, item) => {
+      if (detailData && Array.isArray(detailData?.LocalStorageItem)) {
+        const initialDemandState = detailData?.LocalStorageItem?.reduce((acc, item) => {
           if (item?._id) { // Ensure item._id is defined
             acc[item?._id] = parseInt(item?.demand, 10) || 0; // Default to 0 if demand is undefined
           }
@@ -87,7 +103,8 @@ const RequestDetail = () => {
       }
     })
    }
-console.log('demandState---',demandState)
+
+   console.log('detail Data:--- ',detailData)
 
  // Function to update demand in the backend
  const updateDemandInBackend = (itemId, newDemand) => {
@@ -101,6 +118,8 @@ console.log('demandState---',demandState)
       console.error("Error updating demand:", err);
   });
 };
+
+
 
 
     // Handling loading state
@@ -143,18 +162,54 @@ console.log('demandState---',demandState)
     }
 
     
+    
+    
 
 
     // Assuming the first item in detailData contains the requisiteData array
-    const dataaa = detailData[0];
-    const view = dataaa?.LocalStorageItem;
-    const isChecked=dataaa?.isChecked
-    console.log('isChecked',isChecked)
+    //const dataaa = detailData[0];
+    const view = detailData?.LocalStorageItem;
+    const isChecked=detailData?.isChecked
+    console.log('detail Data2:--- ',view)
     
     if(!view){
+      return <p>data is loading for----</p> 
+    }
+    if(!demandState){
       return <p>data is loading----</p>
     }
+    // if(loading){
+    //   return <p>data is loading------</p>
+    // }
+   
+    console.log('detail Data:--- ',detailData?.LocalStorageItem[0].fullItemDetails.quantity)
+
+    view.map(item=>{
+      console.log('quantity', item?.fullItemDetails?.quantity)
+    })
+
+    // update data in si and ledger-----
+    const {totalItems}=sibSerial
+    const sibSerialPerse=parseInt(totalItems)+1
+    const currentDate = new Date();
+    const approvalDate = currentDate.toLocaleDateString();
+    const handleApproveRequest=()=>{
+    view?.forEach((item,index) => {
+    const quantity=item?.fullItemDetails?.quantity
+    const sibSerialNo=index+sibSerialPerse
     
+    const {itemName,purpose,demand,ledgerSerialNo}=item
+    const balance= parseInt(quantity)-parseInt(demand)
+
+    const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
+    const ledgerData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
+    console.log('sibData',sibData)
+
+    
+    
+  });
+
+}
 
    
    
@@ -184,7 +239,7 @@ console.log('demandState---',demandState)
            {!isChecked && userStatus==='keeper' && <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
            <td>{item?.itemName}</td>
-           <td>{item?.quantity}</td>
+           <td>{item?.fullItemDetails?.quantity}</td>
            <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button  className="bg-[#7C4DFF] px-3 w-10">+</button></td>
            <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
            
@@ -199,7 +254,7 @@ console.log('demandState---',demandState)
            {isChecked && userStatus==='admin' && <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
            <td>{item?.itemName}</td>
-           <td>{item?.quantity}</td>
+           <td>{item?.fullItemDetails?.quantity}</td>
            <td className="flex text-center justify-center"><button onClick={()=>handleDecrease(item?._id)} className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <input className="bg-white min-w-10 max-w-14 text-center text-black" value={demandState?.[item?._id] || 0} readOnly />  <button onClick={()=>handleIncrease(item?._id)} className="bg-[#7C4DFF] px-3 w-10">+</button></td>
            <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
            
@@ -228,7 +283,7 @@ console.log('demandState---',demandState)
   <div className="flex justify-center">
     {!isChecked && userStatus==='keeper' && <button id="keeper-button" onClick={()=>handleSendToRE(id)} className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Send To RE</button>}
 
-    {isChecked && userStatus==='admin' && <button  className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Approve Request</button>}
+    {isChecked && userStatus==='admin' && <button onClick={handleApproveRequest}  className=" px-3 md:px-4 lg:px-4 py-1 md:py-2 lg:py-2 text-base md:text-lg lg:text-lg mt-4 md:mt-6 lg:mt-6 text-white font-bold rounded-md bg-[#4CAF50]">Approve Request</button>}
   </div>
  </div>
                 
