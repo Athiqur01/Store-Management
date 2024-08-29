@@ -3,6 +3,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import Swal from "sweetalert2";
 
 
 const RequestDetail = () => {
@@ -187,8 +188,9 @@ const RequestDetail = () => {
     view.map(item=>{
       console.log('quantity', item?.fullItemDetails?.quantity)
     })
+    console.log('viewwww', view)
 
-    // update data in si and ledger-----
+    // update data in the sib and ledger-----
     const {totalItems}=sibSerial
     const sibSerialPerse=parseInt(totalItems)+1
     const currentDate = new Date();
@@ -200,10 +202,29 @@ const RequestDetail = () => {
     
     const {itemName,purpose,demand,ledgerSerialNo}=item
     const balance= parseInt(quantity)-parseInt(demand)
-
     const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
-    const ledgerData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
-    console.log('sibData',sibData)
+    
+     axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection
+     .then(res=>{
+      if(res.data){
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Item added successfully",
+            showConfirmButton: false,
+            timer: 2500
+          });
+          refetch()
+    }
+      console.log(res.data)
+     })                 
+    
+
+    //  axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
+    //  .then(res=>{
+    //   console.log(res.data)
+    //  })                 
+    
 
     
     
