@@ -204,7 +204,7 @@ const RequestDetail = () => {
     const balance= parseInt(quantity)-parseInt(demand)
     const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
     
-     axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection
+     axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection and ledger simultinuously
      .then(res=>{
       if(res.data){
         Swal.fire({
@@ -217,7 +217,10 @@ const RequestDetail = () => {
           refetch()
     }
       console.log(res.data)
-     })                 
+     })  
+     
+    
+
     
 
     //  axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
@@ -229,6 +232,15 @@ const RequestDetail = () => {
     
     
   });
+
+   //requisition Register
+   axios.post('http://localhost:5012/requisition/register',{view}) //post operation in sibCollection and ledger simultinuously
+   .then(res=>{
+    if(res.data){
+      console.log(res.data)
+  }
+    console.log(res.data)
+   }) 
 
 }
 
