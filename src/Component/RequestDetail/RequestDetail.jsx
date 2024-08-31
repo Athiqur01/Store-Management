@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import Swal from "sweetalert2";
 
@@ -13,6 +13,8 @@ const RequestDetail = () => {
     const [stockState, setStockState]=useState()
     const { id } = useParams();
     console.log('iddddddd---',id)
+
+    const navigate=useNavigate()
 
     //user Status-----
     const {user}=useContext(AuthContext)
@@ -40,7 +42,7 @@ const RequestDetail = () => {
     const userStatus=loggedUser?.status
 
     // count sib number----
-    const {data:sibSerial, refetch}=useQuery({
+    const {data:sibSerial}=useQuery({
       queryKey:['sibSerial'],
       queryFn:async ()=>{
           const res=await axios.get('http://localhost:5012/sib/count')
@@ -52,7 +54,7 @@ const RequestDetail = () => {
 
     // Fetch data using useQuery
     // Fetch data using useQuery in object form
-    const { data: detailData, isLoading, error } = useQuery({
+    const { data: detailData, isLoading, error,refetch } = useQuery({
         queryKey: ['detailData', id], // Unique key for the query
         queryFn: async () => {
             const res = await axios.get(`http://localhost:5012/storeKeepers/${id}`);
@@ -169,7 +171,7 @@ const RequestDetail = () => {
 
     // Assuming the first item in detailData contains the requisiteData array
     //const dataaa = detailData[0];
-    const view = detailData?.LocalStorageItem;
+    const view = detailData?.LocalStorageItem ;
     const isChecked=detailData?.isChecked
     console.log('detail Data2:--- ',view)
     
@@ -223,10 +225,10 @@ const RequestDetail = () => {
 
     
 
-    //  axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
-    //  .then(res=>{
-    //   console.log(res.data)
-    //  })                 
+     axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
+     .then(res=>{
+      console.log(res.data)
+     })                 
     
 
     
@@ -241,6 +243,14 @@ const RequestDetail = () => {
   }
     console.log(res.data)
    }) 
+
+   //delete operation---
+   axios.delete(`http://localhost:5012/viewdetail/${id}`)
+   .then(res=>{
+    navigate('/')
+    console.log(res.data)
+    
+   })
 
 }
 

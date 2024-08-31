@@ -16,6 +16,8 @@ import RequestDetail from './Component/RequestDetail/RequestDetail';
 import Login from './Component/Login/Login';
 import Register from './Component/Register/Register';
 import AuthProvider from './Provider/AuthProvider/AuthProvider';
+import SIB from './Component/SIB/SIB';
+import Ledger from './Component/Ledger/Ledger';
 
 
 
@@ -57,6 +59,14 @@ const router = createBrowserRouter([
       {
         path:'/register',
         element:<Register></Register>
+      },
+      {
+        path:'/sib',
+        element:<SIB></SIB>
+      },
+      {
+        path:'/ledger',
+        element:<Ledger></Ledger>
       }
     ]
   },
