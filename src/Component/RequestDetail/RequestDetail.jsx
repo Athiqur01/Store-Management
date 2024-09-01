@@ -89,11 +89,13 @@ const RequestDetail = () => {
       const newDemand=prevState[itemId]+1
       updateDemandInBackend(itemId, newDemand);
       console.log('newDemand',newDemand)
+
       return {
         ...prevState,
         [itemId]:newDemand
       }
     })
+    refetch()
    }
    // Dandle Decrease------
    const handleDecrease=(itemId)=>{
@@ -105,6 +107,7 @@ const RequestDetail = () => {
         [itemId]:newDemand
       }
     })
+    refetch()
    }
 
    console.log('detail Data:--- ',detailData)
@@ -198,60 +201,79 @@ const RequestDetail = () => {
     const currentDate = new Date();
     const approvalDate = currentDate.toLocaleDateString();
     const handleApproveRequest=()=>{
-    view?.forEach((item,index) => {
-    const quantity=item?.fullItemDetails?.quantity
-    const sibSerialNo=index+sibSerialPerse
-    
-    const {itemName,purpose,demand,ledgerSerialNo}=item
-    const balance= parseInt(quantity)-parseInt(demand)
-    const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
-    
-     axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection and ledger simultinuously
-     .then(res=>{
-      if(res.data){
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Item added successfully",
-            showConfirmButton: false,
-            timer: 2500
-          });
-          refetch()
-    }
-      console.log(res.data)
-     })  
-     
-    
+    refetch()
+    .then(()=>{
 
+      view?.forEach((item,index) => {
+        const quantity=item?.fullItemDetails?.quantity
+        const sibSerialNo=index+sibSerialPerse
+        
+        const {itemName,purpose,demand,ledgerSerialNo}=item
+        const encodedItemName=encodeURIComponent(itemName)
+        const balance= parseInt(quantity)-parseInt(demand)
+        const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
     
+        console.log('demand', demand )
+        
+        //  axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection and ledger simultinuously
+        //  .then(res=>{
+        //   if(res.data){
+        //     Swal.fire({
+        //         position: "top-end",
+        //         icon: "success",
+        //         title: "Item added successfully",
+        //         showConfirmButton: false,
+        //         timer: 2500
+        //       });
+        //       refetch()
+        // }
+        //   console.log(res.data)
+        //  })  
+         
+        
+         //Patch operation--------
+    
+         axios.patch(`http://localhost:5012/balance?q=${itemName}`,{balance})
+         .then(res=>{
+          console.log('update',res.data)
+         })
+        
+        console.log('balanc', itemName )
+    
+    
+        //  axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
+        //  .then(res=>{
+        //   console.log(res.data)
+        //  })                 
+        
+    
+        
+        
+      })
 
-     axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
-     .then(res=>{
-      console.log(res.data)
-     })                 
-    
-
-    
-    
-  });
+    })
+    ;
 
    //requisition Register
-   axios.post('http://localhost:5012/requisition/register',{view}) //post operation in sibCollection and ledger simultinuously
-   .then(res=>{
-    if(res.data){
-      console.log(res.data)
-  }
-    console.log(res.data)
-   }) 
+
+  //  axios.post('http://localhost:5012/requisition/register',{view}) //post operation in sibCollection and ledger simultinuously
+  //  .then(res=>{
+  //   if(res.data){
+  //     console.log(res.data)
+  // }
+  //   console.log(res.data)
+  //  }) 
 
    //delete operation---
-   axios.delete(`http://localhost:5012/viewdetail/${id}`)
-   .then(res=>{
-    navigate('/')
-    console.log(res.data)
-    
-   })
 
+  //  axios.delete(`http://localhost:5012/viewdetail/${id}`)
+  //  .then(res=>{
+  //   navigate('/')
+  //   console.log(res.data)
+    
+  //  })
+   
+refetch()
 }
 
    

@@ -125,7 +125,7 @@ const UpdateItem = () => {
         <th className="">{index+1}</th>
         <td>{item?.itemName}</td>
         <td>{item?.quantity}</td>
-        <td><input onChange={handleInputChange} type="text" placeholder="Item" name='addItem' className="max-w-20 bg-[#9C27B0] rounded-md border-black border-2 text-center" /></td>
+        <td><input onChange={handleInputChange} type="text" placeholder="quantity" name='addItem' className="max-w-20 bg-[#9C27B0] rounded-md border-white border-2 text-center text-white px-2 py-1" /></td>
         <td><button onClick={()=>handleUpdate(item)} className="bg-[#7C4DFF] px-2 py-1 font-bold rounded-md">Update</button></td>
         
         

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image from '../../assets/log.jpeg'
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 const Login = () => {
 
 const {loginUser,setUser,user}=useContext(AuthContext)
+const navigate=useNavigate()
 
  console.log('user',user)   
 const {
@@ -32,6 +33,7 @@ const {
             showConfirmButton: false,
             timer: 3500
           })
+          navigate('/')
         }
     })
   }
