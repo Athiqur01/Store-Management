@@ -1,23 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 
+const SRB = () => {
 
-const LedgerDetail = () => {
-
-    const {name}=useParams()
-    const decodedName=decodeURIComponent(name)
-    console.log('name:',name, decodedName)
-
-    const {data:ledgerDetail}=useQuery({
-        queryKey:['ledgerDetail'],
-        queryFn:async ()=>{
-        const res=await axios.get(`http://localhost:5012/ledgerdetail?q=${decodedName}`)
-        return res.data
+    const {data:srbdata}=useQuery({
+        queryKey:['srbdata'],
+        queryFn:async()=>{
+           const res=await axios.get('http://localhost:5012/srbdata')
+            return res.data
         }
     })
-
-    console.log('ledgerData:', ledgerDetail)
+    console.log('srbData',srbdata)
 
     return (
         <div className="flex flex-col justify-center">
@@ -30,7 +23,7 @@ const LedgerDetail = () => {
              <th className=""></th>
             
              <th className=" "> Item Name  </th>
-             <th className=" "> Stock </th>
+             <th className=" "> Added Item </th>
              <th className=" "> Ledger Serial No </th> 
              <th className=" ">Action</th>
              
@@ -42,12 +35,12 @@ const LedgerDetail = () => {
     
 {/* if user status is keeper and is checked is false */}           
         {
-       ledgerDetail?.map((item,index)=><>
+       srbdata?.map((item,index)=><>
        <tr className="lg:text-xl text-white  text-center">
        <th className="">{index+1}</th>
        
        <td>{item?.itemName}</td>
-       <td>{item?.quantity}</td>
+       <td>{item?.addItemData}</td>
        <td>{item?.ledgerSerialNo}</td>
        
        
@@ -68,4 +61,4 @@ const LedgerDetail = () => {
     );
 };
 
-export default LedgerDetail;
+export default SRB;

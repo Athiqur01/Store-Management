@@ -19,6 +19,7 @@ import AuthProvider from './Provider/AuthProvider/AuthProvider';
 import SIB from './Component/SIB/SIB';
 import Ledger from './Component/Ledger/Ledger';
 import LedgerDetail from './Component/LedgerDetail/LedgerDetail';
+import SRB from './Component/SRB/SRB';
 
 
 
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path:'/ledger/:name',
         element:<LedgerDetail></LedgerDetail>
+      },
+      {
+        path:'/srb',
+        element:<SRB></SRB>
       },
     ]
   },

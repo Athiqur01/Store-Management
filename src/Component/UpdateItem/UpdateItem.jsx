@@ -1,103 +1,157 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 
 
 const UpdateItem = () => {
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm()
+  const {user}=useContext(AuthContext)
+  //get operation to fetch user
+  const {data:loggedUser}=useQuery({
+    queryKey:['loggedUser'],
+    queryFn:async()=>{
+      const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
+      return res.data
+    },
+    enabled: !!(user?.email),
+    retry: 2,
+    refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
+    refetchOnMount: true, // Ensure data is fetched every time the component mounts
+    staleTime: 0, // Disable caching to always fetch fresh data
+})
 
-  // const onSubmit = (data) => {
-  //   console.log(data)
-  //   }
+  const {data:items,refetch}=useQuery({
+    queryKey:['items'],
+    queryFn:async()=>{
+        const res=await axios.get('http://localhost:5012/items')
+        return res.data
+    }
+})
 
-  // const handleInputData=(e)=>{
-  //   const data=e.target.addItem.value
-  //   console.log(data)
+// count srb serial no number----
+const {data:srbSerial}=useQuery({
+  queryKey:['srbSerial'],
+  queryFn:async ()=>{
+      const res=await axios.get('http://localhost:5012/srb/count')
+      console.log(res.data)
+      return res.data   
+  }
+})
 
-  // }
 
-  const [formData, setFormData] = useState({
-    addItem: ''
-    
-  });
+  const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage]=useState({})
 
-  const handleInputChange = (event) => {
-    
+  const handleInputChange = (event,itemId) => {
+    console.log('itemId',itemId)
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [itemId]: value,
     });
+
+    const isNAN=isNaN(value)
+    setErrorMessage({
+      ...errorMessage,
+      [itemId]:isNAN
+    })
+
   };
 
+ // const isNAN=isNaN(formData?.addItem)
   
+  
+  console.log('test',errorMessage)
   
 
-    const {data:items,refetch}=useQuery({
-        queryKey:['items'],
-        queryFn:async()=>{
-            const res=await axios.get('http://localhost:5012/items')
-            return res.data
-        }
-    })
+    
+
+    
+
 
      //handle update----------------
-      const handleUpdate=(item)=>{
-      const addItemData=parseInt(formData?.addItem)
-      const quantityData=parseInt(item?.quantity)
-      const newStock=addItemData+quantityData
-     //const newStock=
-    //  typeof parseInt(id)
-    
-    if(isNaN(newStock)){
-      console.log('nan')
-    }
+     const handleUpdate = (item) => {
+      const addItemData = parseInt(formData[item._id]);
+      const quantityData = parseInt(item?.quantity);
+      const newStock = addItemData + quantityData;
+      const balance=newStock
+      const entryDate= new Date().toISOString().split('T')[0];
+      const addedBy=loggedUser?.name || ''
+      const {totalItems}=srbSerial
+      const srbSerialNo=parseInt(totalItems)+1
 
-    else{
-      axios.patch(`http://localhost:5012/items/${item._id}`,{newStock})
-      .then(res=>{
-        console.log(res)
-        refetch()
-      })
-    }
+      const {itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
+      }=item
 
-     console.log('hello ', newStock )
-     setFormData({
-      addItem: ''
-      
-    })
+      const itemSrb={itemName, description, catagory, addItemData, storeLocation,ledgerSerialNo,srbSerialNo,addedBy,entryDate
+      }
 
-    // Patch operation-/----------------
-    
-    
-      
-    
+      const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,srbSerialNo,addedBy,entryDate}
+  
+      if (!errorMessage[item._id] && !isNaN(addItemData)) {
+        axios
+          .patch(`http://localhost:5012/updateitem?q=${item?.itemName}`,{newStock})
+          .then((res) => {
+            if(res.data){
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Data updated successfully",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+            console.log(res);
+            refetch();
+          });
+  
+        
+  
+        setFormData({
+          ...formData,
+          [item._id]: '',
+        });
 
-      
-    
-    
-    
+         // Post operation in srb
+         axios.post('http://localhost:5012/srb',itemSrb)
+         .then(res=>{
+           if(res.data){
+             console.log(res)
+             refetch()
+           }
+           else{
+             Swal.fire({
+               icon: "error",
+               title: "Oops...",
+               text: "Item not Added to Srb!", 
+             });
+           }
+             
+         })
 
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Your work has been saved",
-      showConfirmButton: false,
-      timer: 1500
-    });
 
-    
+        // Post operation in ledger
+        axios.post('http://localhost:5012/ledger',itemLedger)
+        .then(res=>{
+          if(res.data){
+            console.log(res)
+            refetch()
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Item not Added to Srb!", 
+            });
+          }
+        }) 
 
-    }
 
-    console.log('items',items)
+      }
+    };
 
     return (
         <section>
@@ -125,7 +179,12 @@ const UpdateItem = () => {
         <th className="">{index+1}</th>
         <td>{item?.itemName}</td>
         <td>{item?.quantity}</td>
-        <td><input onChange={handleInputChange} type="text" placeholder="quantity" name='addItem' className="max-w-20 bg-[#9C27B0] rounded-md border-white border-2 text-center text-white px-2 py-1" /></td>
+        <td><input onChange={(event)=>handleInputChange(event,item?._id)} type="text" placeholder="quantity" name='addItem' className="max-w-20 bg-[#9C27B0] rounded-md border-white border-2 text-center text-white px-2 py-1" />  {errorMessage[item._id] && (
+                    <small className="text-red-300">
+                      <br />
+                      insert a number
+                    </small>
+                  )} </td>
         <td><button onClick={()=>handleUpdate(item)} className="bg-[#7C4DFF] px-2 py-1 font-bold rounded-md">Update</button></td>
         
         

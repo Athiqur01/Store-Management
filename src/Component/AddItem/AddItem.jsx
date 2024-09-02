@@ -36,6 +36,17 @@ const AddItem = () => {
     })
  
     console.log('ledgerSerial:', ledgerSerial)
+
+  // count srb serial no number----
+  const {data:srbSerial}=useQuery({
+  queryKey:['srbSerial'],
+  queryFn:async ()=>{
+      const res=await axios.get('http://localhost:5012/srb/count')
+      console.log(res.data)
+      return res.data   
+  }
+})
+
     
     const {
         control,
@@ -51,18 +62,21 @@ const AddItem = () => {
         const catagory= itemInfo?.category
         const quantity= itemInfo?.quantity
         const balance= itemInfo?.quantity
+        const addItemData= itemInfo?.quantity
         const storeLocation=itemInfo?.storeLocation
         const addedBy=loggedUser?.name || ''
         
         const ledgerSerialNo=parseInt(ledgerSerial?.totalItems)+1
         const entryDate= new Date().toISOString().split('T')[0];
+        const {totalItems}=srbSerial
+        const srbSerialNo=parseInt(totalItems)+1
         
         const item={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
         }
 
         const itemSrb={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
         }
-        const itemLedger={itemName, description, catagory, balance, storeLocation,ledgerSerialNo,addedBy,entryDate
+        const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,addedBy,entryDate,srbSerialNo
         }
         console.log('ledger',itemLedger)
         
