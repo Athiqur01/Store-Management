@@ -20,6 +20,8 @@ import SIB from './Component/SIB/SIB';
 import Ledger from './Component/Ledger/Ledger';
 import LedgerDetail from './Component/LedgerDetail/LedgerDetail';
 import SRB from './Component/SRB/SRB';
+import RequisitionRegister from './Component/RequisitionRegister/RequisitionRegister';
+import DownloadRequisition from './Component/DownloadRequisition/DownloadRequisition';
 
 
 
@@ -78,6 +80,14 @@ const router = createBrowserRouter([
         path:'/srb',
         element:<SRB></SRB>
       },
+      {
+        path:'/reqregester',
+        element:<RequisitionRegister></RequisitionRegister>
+      },
+      {
+        path:'/download/:id',
+        element:<DownloadRequisition></DownloadRequisition>
+      },
     ]
   },
 ]);
@@ -87,7 +97,7 @@ createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
    <StrictMode>
    <AuthProvider>
-   <div className='container mx-auto max-w-full bg-[#9C27B0]'>
+   <div className='container mx-auto max-w-[1280px] bg-[#9C27B0]'>
     <RouterProvider router={router} />
     </div>
    </AuthProvider>

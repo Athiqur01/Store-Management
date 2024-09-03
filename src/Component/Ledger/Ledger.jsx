@@ -28,7 +28,7 @@ const Ledger = () => {
     return (
         <div className="flex flex-col justify-center">
             <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">SIB Item List</h2>
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">Ledger Item List</h2>
                 <table className="table   ">
                   {/* head */}
                  <thead className="">

@@ -19,11 +19,6 @@ const RequestDetail = () => {
     //user Status-----
     const {user}=useContext(AuthContext)
 
-    // const ids=Object.keys(demandState)
-    // console.log('idsss',ids)
-
-    
-
     const {data:loggedUser}=useQuery({
         queryKey:['loggedUser',user?.email],
         queryFn:async()=>{
@@ -38,7 +33,7 @@ const RequestDetail = () => {
     
     })
     
-    console.log('logged user',loggedUser?.status)
+    
     const userStatus=loggedUser?.status
 
     // count sib number----
@@ -196,10 +191,12 @@ const RequestDetail = () => {
     console.log('viewwww', view)
 
     // update data in the sib and ledger-----
+    console.log('logged user',loggedUser?.name)
     const {totalItems}=sibSerial
     const sibSerialPerse=parseInt(totalItems)+1
     const currentDate = new Date();
     const approvalDate = currentDate.toLocaleDateString();
+    const approvedBy=loggedUser?.name
     const handleApproveRequest=()=>{
     refetch()
     .then(()=>{
@@ -215,20 +212,20 @@ const RequestDetail = () => {
     
         console.log('demand', demand )
         
-        //  axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection and ledger simultinuously
-        //  .then(res=>{
-        //   if(res.data){
-        //     Swal.fire({
-        //         position: "top-end",
-        //         icon: "success",
-        //         title: "Item added successfully",
-        //         showConfirmButton: false,
-        //         timer: 2500
-        //       });
-        //       refetch()
-        // }
-        //   console.log(res.data)
-        //  })  
+         axios.post('http://localhost:5012/sib',sibData) //post operation in sibCollection and ledger simultinuously
+         .then(res=>{
+          if(res.data){
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Item added successfully",
+                showConfirmButton: false,
+                timer: 2500
+              });
+              refetch()
+        }
+          console.log(res.data)
+         })  
          
         
          //Patch operation--------
@@ -241,13 +238,10 @@ const RequestDetail = () => {
         console.log('balanc', itemName )
     
     
-        //  axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
-        //  .then(res=>{
-        //   console.log(res.data)
-        //  })                 
-        
-    
-        
+         axios.post('http://localhost:5012/sibLedger',sibData) //post operation of requisition in ledgerCollection
+         .then(res=>{
+          console.log(res.data)
+         })                 
         
       })
 
@@ -255,23 +249,24 @@ const RequestDetail = () => {
     ;
 
    //requisition Register
+   const registerData={view,approvalDate,approvedBy}
 
-  //  axios.post('http://localhost:5012/requisition/register',{view}) //post operation in sibCollection and ledger simultinuously
-  //  .then(res=>{
-  //   if(res.data){
-  //     console.log(res.data)
-  // }
-  //   console.log(res.data)
-  //  }) 
+   axios.post('http://localhost:5012/requisition/register',{registerData}) //post operation in sibCollection and ledger and requisition Register simultinuously
+   .then(res=>{
+    if(res.data){
+      console.log(res.data)
+  }
+    console.log(res.data)
+   }) 
 
    //delete operation---
 
-  //  axios.delete(`http://localhost:5012/viewdetail/${id}`)
-  //  .then(res=>{
-  //   navigate('/')
-  //   console.log(res.data)
+   axios.delete(`http://localhost:5012/viewdetail/${id}`)
+   .then(res=>{
+    navigate('/')
+    console.log(res.data)
     
-  //  })
+   })
    
 refetch()
 }

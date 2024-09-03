@@ -108,7 +108,7 @@ const SIB = () => {
       
     </tbody>
   </table>
-  <div><button className="bg-[#4CAF50], text-white" onClick={generatePdf}>Download Pdf</button></div>
+  <div><button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button></div>
  </div>
  
                 
