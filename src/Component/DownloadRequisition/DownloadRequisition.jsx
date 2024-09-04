@@ -24,12 +24,24 @@ const DownloadRequisition = () => {
    // const {itemName,demand,purpose}=downloadData
    const approvalDate=download?.registerData?.approvalDate
    const approvedBy=download?.registerData?.approvedBy
+   const approverDesignation=download?.registerData?.approverDesignation
+   const demanderDesignation=download?.registerData?.demanderDesignation
+   const requisitionBy=download?.registerData?.requisitionBy
+
+
    const downloadData=download?.registerData?.view
    console.log('ittt',downloadData)
+   console.log('daaaaaa',requisitionBy )
 
    const generatePdf=()=>{
     const doc=new jsPDF()
-    doc.text('Requisition', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+    const startY = 20;
+    doc.text('The People`s Republic of Bangladesh', doc.internal.pageSize.getWidth() / 2, startY, { align: 'center' });
+    doc.text('Bangladesh Betar', doc.internal.pageSize.getWidth() / 2, startY + 7, { align: 'center' });
+    doc.text('Mymensingh', doc.internal.pageSize.getWidth() / 2, startY + 14, { align: 'center' });
+    doc.text('Requisition', doc.internal.pageSize.getWidth() / 2, startY + 26, { align: 'center' });
+    doc.text('____________', doc.internal.pageSize.getWidth() / 2, startY +28 , { align: 'center' });
+    
     const tableColumn = [
         'No.',
         'Item Name',
@@ -50,7 +62,7 @@ const DownloadRequisition = () => {
       doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        startY: 20,
+        startY: 60,
         styles: {
           halign: 'center', // Horizontal alignment of text (center)
           valign: 'middle', // Vertical alignment of text (middle)
@@ -66,6 +78,52 @@ const DownloadRequisition = () => {
           valign: 'middle',
         },
       });
+     
+      const finalY = doc.lastAutoTable.finalY ;
+
+  //second table
+  const secondTableRows = [];
+
+// First column data with multiple lines
+const firstColumnData = [
+  [
+    requisitionBy,         // First line: Name or default 'RE'
+    demanderDesignation,        // Second line: Title
+    '________________________',
+    'Requisition By'      // Third line: Approval Date or 'N/A'
+  ].join('\n'),                 // Join the array with new line characters
+];
+
+// Second column data with multiple lines
+const secondColumnData = [
+  [
+    approvedBy,            // First line: Name
+    approverDesignation,          // Second line: Title
+    approvalDate,
+    '_______________________',
+    'Approver'
+               // Third line: Date
+  ].join('\n'),                 // Join the array with new line characters
+];
+
+// Push the formatted data as a row with two columns
+secondTableRows.push([firstColumnData, secondColumnData]);
+        doc.autoTable({
+          
+          body: secondTableRows,
+          startY: finalY + 25,
+          styles: {
+            halign: 'center', // Horizontal alignment of text (center)
+            valign: 'middle', // Vertical alignment of text (middle)
+          },
+          
+          bodyStyles: {
+            halign: 'center',
+            valign: 'middle',
+            
+          },
+        });
+      
   
       doc.save('Requisition.pdf');      
 
@@ -74,7 +132,7 @@ const DownloadRequisition = () => {
     return (
         <div className="flex flex-col justify-center">
         <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
-              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">SRB Item List</h2>
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">Requisition</h2>
             <table className="table   ">
               {/* head */}
              <thead className="">

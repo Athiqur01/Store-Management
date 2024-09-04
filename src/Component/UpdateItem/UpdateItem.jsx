@@ -66,12 +66,6 @@ const {data:srbSerial}=useQuery({
   
   console.log('test',errorMessage)
   
-
-    
-
-    
-
-
      //handle update----------------
      const handleUpdate = (item) => {
       const addItemData = parseInt(formData[item._id]);

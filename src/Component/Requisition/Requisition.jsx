@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Demand from "../Demand/Demand";
 import { removeItem } from "localforage";
+import { motion } from "framer-motion"
 
 
 const Requisition = () => {
-
+    const headingText = "Requisition";
     //Handle change input name
     //const [formData, setFormData] = useState({});
 
@@ -134,24 +135,7 @@ const Requisition = () => {
       
     }
    
-    
-
-
-      
-     //Post operation in Requisition
-        //  axios.post(`http://localhost:5012/requisition?q=${itemName}`,demandItemData)
-        //  .then(res=>{
-        //      console.log(res)
-        //      if(res.data){
-        //       Swal.fire({
-        //           position: "top-end",
-        //           icon: "success",
-        //           title: "Requisition sent to the store keeper",
-        //           showConfirmButton: false,
-        //           timer: 2500
-        //         });
-        //   }
-        //  })
+    window.location.reload();
     }
 
     console.log('input data',inputData)
@@ -177,7 +161,29 @@ console.log('input data',inputData, 'color data', colorData)
 
     return (
         <section className=" mx-auto text-center py-6 md:py-8 lg:py-10">
-            <h2 className="text-white text-3xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10">Requisition</h2>
+            
+
+            <motion.h2
+      className="text-white text-3xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10"
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#FFFFFF' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.5,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
 
             <div className="flex flex-col lg:flex-row gap-4 ">
 
@@ -189,6 +195,7 @@ console.log('input data',inputData, 'color data', colorData)
                 <select value="" className="text-lg font-bold text-black bg-white py-2 mb-4 text-center" >
                   <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Computer</option>
                   <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Electric</option>
+                  <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Stationary</option>
                   <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Miscellaneous</option>
                 </select>
                 

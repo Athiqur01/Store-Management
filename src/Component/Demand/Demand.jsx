@@ -60,9 +60,10 @@ const Demand = () => {
     // Post Operation to send data to storekeeper
     const handleStoreKeeper = () => {
         const requisitionBy = userName;
+        const designation=loggedUser?.designation
         const isChecked = false;
 
-        axios.post('http://localhost:5012/storeKeeper', { LocalStorageItem: localStorageItems, requisitionBy, isChecked })
+        axios.post('http://localhost:5012/storeKeeper', { LocalStorageItem: localStorageItems, requisitionBy,designation,isChecked})
             .then(res => {
                 if (res.data) {
                     localStorage.removeItem('localData');

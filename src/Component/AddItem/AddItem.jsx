@@ -1,17 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import { motion } from "framer-motion"
 
 
 
 const AddItem = () => {
-
+    const headingText = "Add Item";
     const {user}=useContext(AuthContext)
     //const {count}=useLoaderData()
-    
+    const [errorMessage, setErrorMessage]=useState(false)
     //get operation to fetch user
     const {data:loggedUser}=useQuery({
         queryKey:['loggedUser'],
@@ -70,6 +71,10 @@ const AddItem = () => {
         const entryDate= new Date().toISOString().split('T')[0];
         const {totalItems}=srbSerial
         const srbSerialNo=parseInt(totalItems)+1
+
+        const parseQuantity=parseInt(quantity)
+        const isNAN=isNaN(parseQuantity)
+       
         
         const item={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
         }
@@ -79,8 +84,9 @@ const AddItem = () => {
         const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,addedBy,entryDate,srbSerialNo
         }
         console.log('ledger',itemLedger)
-        
-      //  post operation in items collection----
+
+        if(!isNAN){
+          //  post operation in items collection----
         axios.post('http://localhost:5012/addItem',item)
         .then(res=>{
             if(res.data){
@@ -129,7 +135,15 @@ const AddItem = () => {
               text: "Item not Added to Srb!", 
             });
           }
-        }) 
+        })
+          
+        }
+
+        else{
+          setErrorMessage(true)
+        }
+        
+       
       }
 
 
@@ -144,7 +158,29 @@ const AddItem = () => {
 
     return (
         <section className="max-w-[1000px] mx-auto text-center py-6 md:py-8 lg:py-10">
-            <h2 className="text-white text-3xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10">Add Item</h2>
+                    
+    <motion.h2
+      className="text-white text-3xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10"
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#FFFFFF' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.2,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+
             <div className="border-white border-2 rounded-md mx-2">
                 <form  onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 p-10 "   >
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Name</label>
@@ -169,6 +205,14 @@ const AddItem = () => {
           {errors.category && <p className="text-red-500">{errors.category.message}</p>}
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Quantity</label>
                 <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full " />
+
+                {errorMessage && (
+                    <p className="text-red-300">
+                      <br />
+                      insert a number
+                    </p>
+                  )}
+
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Store Name</label>
                 <Controller
                       name="storeLocation"

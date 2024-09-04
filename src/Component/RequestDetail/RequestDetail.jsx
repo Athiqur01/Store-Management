@@ -63,6 +63,7 @@ const RequestDetail = () => {
     
     });
 
+    console.log('detaillll',detailData)
     // useEffect to update demandState when detailData changes
     useEffect(() => {
       if (detailData && Array.isArray(detailData?.LocalStorageItem)) {
@@ -171,7 +172,9 @@ const RequestDetail = () => {
     //const dataaa = detailData[0];
     const view = detailData?.LocalStorageItem ;
     const isChecked=detailData?.isChecked
-    console.log('detail Data2:--- ',view)
+    const requisitionBy=detailData?.requisitionBy
+    const demanderDesignation=detailData?.designation
+    console.log('detail Data2:--- ',requisitionBy,demanderDesignation)
     
     if(!view){
       return <p>data is loading for----</p> 
@@ -197,6 +200,8 @@ const RequestDetail = () => {
     const currentDate = new Date();
     const approvalDate = currentDate.toLocaleDateString();
     const approvedBy=loggedUser?.name
+    const approverDesignation=loggedUser?.designation 
+    console.log('designation',approverDesignation)
     const handleApproveRequest=()=>{
     refetch()
     .then(()=>{
@@ -249,7 +254,7 @@ const RequestDetail = () => {
     ;
 
    //requisition Register
-   const registerData={view,approvalDate,approvedBy}
+   const registerData={view,approvalDate,approvedBy,approverDesignation,demanderDesignation,requisitionBy}
 
    axios.post('http://localhost:5012/requisition/register',{registerData}) //post operation in sibCollection and ledger and requisition Register simultinuously
    .then(res=>{

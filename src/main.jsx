@@ -97,7 +97,7 @@ createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
    <StrictMode>
    <AuthProvider>
-   <div className='container mx-auto max-w-[1280px] bg-[#9C27B0]'>
+   <div className='container mx-auto max-w-[1400px] bg-[#9C27B0]'>
     <RouterProvider router={router} />
     </div>
    </AuthProvider>
