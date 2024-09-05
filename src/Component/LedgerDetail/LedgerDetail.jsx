@@ -118,7 +118,7 @@ const LedgerDetail = () => {
   
 </tbody>
 </table>
-<button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button>
+<button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50] hover:scale-110 transition duration-300 ease-in-out">Download</button>
 </div>
 
             

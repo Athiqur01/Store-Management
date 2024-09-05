@@ -19,7 +19,7 @@ const InventoryManagement = () => {
       {headingText.split("").map((char, index) => (
         <motion.span
           key={index}
-          initial={{ opacity: 0, y: -10,color: '#FFFFFF' }}
+          initial={{ opacity: 0, y: -10,color: '#fffff' }}
           animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
           transition={{
             duration: 0.8,
@@ -41,21 +41,21 @@ const InventoryManagement = () => {
                 <motion.div 
                 className="text-3xl md:text-4xl lg:text-5xl font-bold  text-[#4CAF50] bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center"
                  style={{ backgroundImage: `url(${cataloge})` }}
-                 initial={{opacity:0, scale:0}} 
+                 initial={{opacity:0, scale:.8}} 
                  whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
                  transition={{duration:1.2}}>Item Catalog</motion.div>
                 
                 <Link to='/addItem'><motion.div
                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#4CAF50] text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center" 
                  style={{ backgroundImage: `url(${addItem})` }}
-                 initial={{opacity:0, scale:0}} 
+                 initial={{opacity:0, scale:.8}} 
                  whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
                  transition={{duration:1.2}}
                  >Add Item</motion.div></Link>
                 
                 <Link to='/updateItem'><motion.div className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#4CAF50] text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center " 
                 style={{ backgroundImage: `url(${updateItem})` }}
-                initial={{opacity:0, scale:0}} 
+                initial={{opacity:0, scale:.8}} 
                  whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
                  transition={{duration:1.2}}>Updaye Item</motion.div></Link>
             </div>

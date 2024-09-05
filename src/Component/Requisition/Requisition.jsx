@@ -232,7 +232,7 @@ console.log('input data',inputData, 'color data', colorData)
             <td>{item.quantity}</td>
             <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={inputData[item?._id]?.demand } className=' min-w-10 max-w-14 text-black text-center rounded-sm '  /> </td>
             <td><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={inputData[item?._id]?.purpose} id="" className="max-w-16 max-h-7 text-black rounded-sm   "></textarea></td>
-            <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
+            <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50] hover:scale-105 transition duration-300 ease-in-out">Send</button></td>
             
             </tr>
           </>)   

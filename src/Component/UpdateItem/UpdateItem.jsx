@@ -4,11 +4,13 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import { motion } from "framer-motion"
 
 
 const UpdateItem = () => {
 
   const {user}=useContext(AuthContext)
+  const headingText = "Update Item";
   //get operation to fetch user
   const {data:loggedUser}=useQuery({
     queryKey:['loggedUser'],
@@ -149,7 +151,32 @@ const {data:srbSerial}=useQuery({
 
     return (
         <section>
+            <motion.h2
+     className="text-white font-bold text-2xl md:text-4xl lg:text-6xl pt-8 md:pt-12 lg:pt-14 text-center"
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#fffff' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.8,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+
             <div className="overflow-x-auto px-2  lg:px-6 py-10 mx-auto flex justify-center ">
+
+          
+
   <table className="table max-w-[1000px]  ">
     {/* head */}
     <thead className="">
@@ -179,7 +206,7 @@ const {data:srbSerial}=useQuery({
                       insert a number
                     </small>
                   )} </td>
-        <td><button onClick={()=>handleUpdate(item)} className="bg-[#7C4DFF] px-2 py-1 font-bold rounded-md">Update</button></td>
+        <td><button onClick={()=>handleUpdate(item)} className="bg-[#7C4DFF] px-2 py-1 font-bold rounded-md hover:scale-110 transition duration-300 ease-in-out">Update</button></td>
         
         
         

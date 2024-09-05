@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"
 
 
 const Ledger = () => {
+    const headingText = "Ledger Item List";
     const navigate=useNavigate()
 
     
@@ -28,7 +30,29 @@ const Ledger = () => {
     return (
         <div className="flex flex-col justify-center">
             <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">Ledger Item List</h2>
+                  
+                  <motion.h2
+      className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 "
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#fffff' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.8,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+
                 <table className="table   ">
                   {/* head */}
                  <thead className="">
@@ -52,7 +76,7 @@ const Ledger = () => {
            <td>{item?.itemName}</td>
            <td>{item?.quantity}</td>
            <td>{item?.ledgerSerialNo}</td>
-           <td><button onClick={()=>handleLedgerDetail(item?.itemName)}  className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50]">Ledger Detail</button></td>
+           <td><button onClick={()=>handleLedgerDetail(item?.itemName)}  className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50] hover:scale-105 transition duration-300 ease-in-out">Ledger Detail</button></td>
            
            
            </tr>

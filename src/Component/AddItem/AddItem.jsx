@@ -184,7 +184,7 @@ const AddItem = () => {
             <div className="border-white border-2 rounded-md mx-2">
                 <form  onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 p-10 "   >
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Name</label>
-                <input type="text"  {...register("itemName", { required: true })} placeholder="Item Name" className="input input-bordered text-black w-full " required />
+                <input type="text"  {...register("itemName", { required: true })} placeholder="Item Name" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out" required />
                 
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Catagory</label>
                  <Controller
@@ -193,7 +193,7 @@ const AddItem = () => {
             defaultValue=""
             rules={{ required: 'Category is required' }}
             render={({ field }) => (
-              <select {...field} className="input input-bordered text-black w-full">
+              <select {...field} className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out">
                 <option value="">Select a category</option>
                 <option value="computer">Computer</option>
                 <option value="electric">Electric</option>
@@ -204,7 +204,7 @@ const AddItem = () => {
           />
           {errors.category && <p className="text-red-500">{errors.category.message}</p>}
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Quantity</label>
-                <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full " />
+                <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " />
 
                 {errorMessage && (
                     <p className="text-red-300">
@@ -220,7 +220,7 @@ const AddItem = () => {
                       defaultValue=""
                       rules={{ required: 'Store Location is required' }}
                       render={({ field }) => (
-                        <select {...field} className="input input-bordered text-black w-full">
+                        <select {...field} className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out">
                           <option value="">Select a Store Location</option>
                           <option value="generalStore">General Store</option>
                           <option value="electricStore">Technical Store</option>
@@ -230,9 +230,9 @@ const AddItem = () => {
                     {errors.storeLocation && <p className="text-red-500">{errors.storeLocation.message}</p>}
 
                     <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Description</label>
-                <textarea   id="" {...register("description", { required: true })} placeholder=" Description like brand, model etc." className="w-full rounded-lg h-16 p-4 text-black"></textarea>
+                <textarea   id="" {...register("description", { required: true })} placeholder=" Description like brand, model etc." className="w-full rounded-lg h-16 p-4 text-black hover:scale-105 transition duration-300 ease-in-out"></textarea>
                         
-                <button type="submit" className='px-4 py-2 bg-[#03A9F4] text-white rounded-md  border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Save Item</button>
+                <button type="submit" className='px-4 py-2 bg-[#03A9F4] text-white rounded-md  border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold hover:scale-110 '>Save Item</button>
                 </form>
                 </div>
         </section>

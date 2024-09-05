@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
+import { motion } from "framer-motion"
 
 const SIB = () => {
+  const headingText = "SIB Item List";
     const {data:sib}=useQuery({
         queryKey:['sib'],
         queryFn:async()=>{
@@ -69,7 +71,29 @@ const SIB = () => {
     return (
         <div className="flex flex-col justify-center">
             <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">SIB Item List</h2>
+                  
+                  <motion.h2
+      className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 "
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#fffff' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.8,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+
                 <table className="table   ">
                   {/* head */}
                  <thead className="">

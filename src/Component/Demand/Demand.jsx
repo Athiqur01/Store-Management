@@ -100,7 +100,7 @@ const Demand = () => {
                 </tbody>
             </table>
             
-            <button onClick={handleStoreKeeper} className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50]">Send To Store Keeper</button>
+            <button onClick={handleStoreKeeper} className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50] hover:scale-110 transition duration-300 ease-in-out">Send To Store Keeper</button>
         </div>
     );
 };

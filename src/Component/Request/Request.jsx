@@ -4,9 +4,11 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
+import { motion } from "framer-motion"
 
 const Request = () => {
     const {user}=useContext(AuthContext)
+    const headingText = "All Request";
     //get operation to fetch all request from storekeeper
     const {data:loggedUser}=useQuery({
         queryKey:['loggedUser'],
@@ -68,7 +70,29 @@ if(!loggedUser){
     console.log('storekeeper',keeperData)
     return (
         <div className="py-10 md:py-16 lg:py-20">
-            <h2 className="text-white font-bold text-2xl md:text-4xl lg:text-6xl pb-8 md:pb-12 lg:pb-14 text-center">All Request</h2>
+            
+            <motion.h2
+     className="text-white font-bold text-2xl md:text-4xl lg:text-6xl pb-8 md:pb-12 lg:pb-14 text-center"
+    >
+      {headingText.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10,color: '#fffff' }}
+          animate={{ opacity: 1, y: 0, color: '#03A9F4' }}
+          transition={{
+            duration: 0.8,
+            delay: index * 0.1,
+            repeat: Infinity,           // Loop animation
+            repeatType: "mirror",       // Alternate direction after each loop
+            repeatDelay: 1              // Delay between loops
+          }}
+          style={{ display: 'inline-block', minWidth: char === " " ? "0.5em" : "auto" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 md:px-4 lg:px-8">
        
        
