@@ -47,7 +47,7 @@ const Navbar = () => {
 
     return (
       <div>
-      <div className="navbar bg-[#7B1FA2]">
+      <div className="navbar bg-[#7B1FA2] ">
 
         {/* Navbar Start */}
         <div className="navbar-start">
