@@ -11,7 +11,7 @@ const Footer = () => {
     
   </nav> 
   <nav className="text-white mx-auto">
-    <h6 className="footer-title ">Contact</h6> 
+    <h6 className="footer-title text-center lg:text-left ">Contact</h6> 
     <p className="text-left ">BAU Campus, Sesh Moor <br />Call us FREE<a className="link link-hover text-left" href="">+8801720112498</a>  <br />
 <a className="link link-hover" >athik.apece@gmail.gov.bd</a>
 </p>

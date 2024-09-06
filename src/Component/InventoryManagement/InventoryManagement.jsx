@@ -38,12 +38,12 @@ const InventoryManagement = () => {
             <div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-2 md:px-4 lg:px-6 pt-14"
             >
-                <motion.div 
+                <Link to='/catalog'><motion.div 
                 className="text-3xl md:text-4xl lg:text-5xl font-bold  text-[#4CAF50] bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center"
                  style={{ backgroundImage: `url(${cataloge})` }}
                  initial={{opacity:0, scale:.8}} 
                  whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
-                 transition={{duration:1.2}}>Item Catalog</motion.div>
+                 transition={{duration:1.2}}>Item Catalog</motion.div></Link>
                 
                 <Link to='/addItem'><motion.div
                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#4CAF50] text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center" 

@@ -22,6 +22,7 @@ import LedgerDetail from './Component/LedgerDetail/LedgerDetail';
 import SRB from './Component/SRB/SRB';
 import RequisitionRegister from './Component/RequisitionRegister/RequisitionRegister';
 import DownloadRequisition from './Component/DownloadRequisition/DownloadRequisition';
+import ItemCatalog from './Component/ItemCatalog/ItemCatalog';
 
 
 
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
       {
         path:'/download/:id',
         element:<DownloadRequisition></DownloadRequisition>
+      },
+      {
+        path:'/catalog',
+        element:<ItemCatalog></ItemCatalog>
       },
     ]
   },
