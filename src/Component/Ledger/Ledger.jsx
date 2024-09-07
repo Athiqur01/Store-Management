@@ -2,22 +2,50 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react";
 
 
 const Ledger = () => {
     const headingText = "Ledger Item List";
     const navigate=useNavigate()
+    const [currentPage, setCurrentPage]=useState(0)
+    const [items,setItems]=useState(null)
 
-    
+    console.log('iuy',items)
 
-    const {data:ledgerData}=useQuery({
-        queryKey:['ledgerData'],
-        queryFn:async()=>{
-        const res=await axios.get('http://localhost:5012/ledgerdata')
-        return res.data
-        }
-    })
-    console.log('ledger data:',ledgerData)
+   
+
+    //count item from item collection to set ledger serial no
+    const {data:ledgerSerial, refetch}=useQuery({
+      queryKey:['ledgerSerial'],
+      queryFn:async ()=>{
+          const res=await axios.get('http://localhost:5012/count')
+          return res.data
+      }
+  })
+
+  console.log('ledgerSerial:', ledgerSerial?.totalItems)
+//Pagenation---------------------
+const count=ledgerSerial?.totalItems
+const itemsPerPage=10
+const totalPages=Math.ceil(count/itemsPerPage)
+const pages=[]
+    for(let i=0; i<totalPages; i++){
+        pages?.push(i)
+
+    }
+    console.log(pages)
+
+
+    useEffect(()=>{
+      fetch(`http://localhost:5012/shortedItem?page=${currentPage}&size=${itemsPerPage}`)
+      .then(res=>res.json())
+      .then(data=>setItems(data))
+  }
+
+  ,[currentPage,itemsPerPage])
+
+
 
     const handleLedgerDetail=(name)=>{
         const encodedName = encodeURIComponent(name);
@@ -69,7 +97,7 @@ const Ledger = () => {
         
     {/* if user status is keeper and is checked is false */}           
             {
-           ledgerData?.map((item,index)=><>
+           items?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
            
@@ -90,6 +118,16 @@ const Ledger = () => {
   
  </div>
  
+ <div className="flex justify-center">
+ <div className='space-x-3 py-10'>
+            <button onClick={()=>currentPage>0 && setCurrentPage(currentPage-1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Prev</button>
+                {pages.map(page=><>
+                                   <button onClick={()=>{setCurrentPage(page)}} className={currentPage===page? 'px-3 py-1 border-red-50 border-2 bg-[#7C4DFF] text-white ' :'px-3 py-1 border-red-50 border-2 bg-red-50 '}>{page}</button>
+                                </>)}
+            <button onClick={()=>currentPage<pages?.length && setCurrentPage(currentPage+1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Next</button>
+            
+            </div>
+ </div>
                 
         </div>
     );
