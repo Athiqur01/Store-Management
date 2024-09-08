@@ -3,11 +3,13 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { button } from "framer-motion/client";
 
 
 const Navbar = () => {
 
     const {user,logOut}=useContext(AuthContext)
+   
     
     //get operation to fetch user
     const {data:loggedUser}=useQuery({
@@ -38,12 +40,15 @@ const Navbar = () => {
   // State for mobile dropdown menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // Sub-menu state
+  const [dropDownState, setDropDownState]=useState(false)
 
   // Toggle mobile menu
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   // Toggle sub-menu
   const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
+  const toggleDropDown=()=>setDropDownState(!dropDownState)
+  console.log('drop',dropDownState)
 
     return (
       <div>
@@ -71,13 +76,26 @@ const Navbar = () => {
 
         {/* Navbar End */}
         <div className="navbar-end">
+          
           {user ? (
-            <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
-              <p>{loggedUser?.name}</p> Logout
-            </button>
+            // <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
+            //   <p>{loggedUser?.name}</p> Logout
+            // </button>
+            <button onClick={toggleDropDown} className="rounded-full w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16  text-base font-semibold text-[#FFFFFF] bg-[#03A9F4] text-center">user</button>
           ) : (
             <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
           )}
+
+          {/* dropdown */}
+          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState? 'display':'hidden'}`}>
+        <ul onClick={toggleDropDown} className="p-4 font-bold text-white">
+            <button className="btn btn-ghost w-full text-left"><li>user name</li></button>
+            <Link ><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
+            <button className="btn btn-ghost w-full text-left"><li onClick={logOut}>Log Out</li></button>
+            
+        </ul>
+    </div>
+
         </div>
       </div>
 
