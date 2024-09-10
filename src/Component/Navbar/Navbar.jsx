@@ -90,7 +90,7 @@ const Navbar = () => {
           <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState? 'display':'hidden'}`}>
         <ul onClick={toggleDropDown} className="p-4 font-bold text-white">
             <button className="btn btn-ghost w-full text-left"><li>user name</li></button>
-            <Link ><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
+            <Link to='/deshboard'><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
             <button className="btn btn-ghost w-full text-left"><li onClick={logOut}>Log Out</li></button>
             
         </ul>

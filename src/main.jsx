@@ -23,6 +23,8 @@ import SRB from './Component/SRB/SRB';
 import RequisitionRegister from './Component/RequisitionRegister/RequisitionRegister';
 import DownloadRequisition from './Component/DownloadRequisition/DownloadRequisition';
 import ItemCatalog from './Component/ItemCatalog/ItemCatalog';
+import Deshboard from './Component/Deshboard/Deshboard';
+import Profile from './Component/Profile/Profile';
 
 
 
@@ -95,6 +97,17 @@ const router = createBrowserRouter([
       },
     ]
   },
+
+  {
+    path:'/deshboard',
+    element:<Deshboard></Deshboard>,
+    children:[
+      {
+        path:'/deshboard/profile',
+        element:<Profile></Profile>
+      }
+    ]
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(
