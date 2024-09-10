@@ -25,6 +25,7 @@ import DownloadRequisition from './Component/DownloadRequisition/DownloadRequisi
 import ItemCatalog from './Component/ItemCatalog/ItemCatalog';
 import Deshboard from './Component/Deshboard/Deshboard';
 import Profile from './Component/Profile/Profile';
+import UserManagement from './Component/userManagement/UserManagement';
 
 
 
@@ -105,7 +106,11 @@ const router = createBrowserRouter([
       {
         path:'/deshboard/profile',
         element:<Profile></Profile>
-      }
+      },
+      {
+        path:'/deshboard/user',
+        element:<UserManagement></UserManagement>
+      },
     ]
   }
 ]);

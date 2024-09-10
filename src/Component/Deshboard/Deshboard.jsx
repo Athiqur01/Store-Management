@@ -10,7 +10,8 @@ const Deshboard = () => {
         <div className="flex  ">
             <div className="w-[30%] bg-[#E1BEE7] pt-10 h-screen flex flex-col items-start px-2 md:6 lg:px-8 font-bold text-xs md:text-base lg:text-base gap-2">
              <Link to='/deshboard/profile'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><CgProfile />Profile</button></Link>
-             <button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><IoSettingsOutline /> User Management</button>
+             
+             <Link to='/deshboard/user'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><IoSettingsOutline /> User Management</button></Link>
              <button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><RxUpdate />Update Profile</button>
              <Link to='/'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><FaHome />Home</button></Link>
 
