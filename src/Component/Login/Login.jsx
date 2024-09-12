@@ -1,15 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import image from '../../assets/log.jpeg'
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
 
 const {loginUser,setUser,user}=useContext(AuthContext)
 const navigate=useNavigate()
-
+const [showPassword, setShowPassword]=useState(false)
  console.log('user',user)   
 const {
     register,
@@ -38,7 +39,11 @@ const {
     })
   }
 
+  const handleShowPassword=()=>{
+    setShowPassword(!showPassword)
+  }
 
+  console.log('pass',showPassword)
     return (
         <div className="pb-10 md:pb-14 lg:pb-20">
             
@@ -61,10 +66,20 @@ const {
                  >
                     
                 <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8">
-                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 p-10 "   >
-                <input type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " />
-                <input type="password" name="password" placeholder="Your Password" {...register("password", { required: true })} className="input input-bordered text-black w-full " />
-                <button type="submit" className='px-4 py-2  text-white bg-[#4CAF50] rounded-md border border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
+                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 px-10 pt-10 "   >
+               <label htmlFor=""> <input type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " /></label>
+
+                
+
+                <label className="input input-bordered flex items-center gap-2">
+                <input onClick={handleShowPassword} type="password" name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
+                <span className="text-2xl">{showPassword? <FaEyeSlash />:<FaEye />} </span>
+                </label>
+
+
+                <label htmlFor="">
+                <button type="submit" className='px-4 pt-2 mt-6 mb-3 text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
+                </label>
                 </form>
                 <p className="pb-6 text-white">if not registered, please <span className="text-blue-300 font-bold"><Link to='/register'>Register</Link></span></p>
                 </div>

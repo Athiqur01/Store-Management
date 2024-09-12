@@ -4,6 +4,7 @@ import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { button } from "framer-motion/client";
+import userImg from '../../assets/user2.jpg'
 
 
 const Navbar = () => {
@@ -56,9 +57,9 @@ const Navbar = () => {
 
         {/* Navbar Start */}
         <div className="navbar-start">
-          <div className="dropdown">
+          <div className="dropdown ">
             {/* Mobile Hamburger Menu Button */}
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden" onClick={toggleMobileMenu}>
+            <div tabIndex={0} role="button" className="btn btn-ghost text-white lg:hidden" onClick={toggleMobileMenu}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
               </svg>
@@ -68,8 +69,8 @@ const Navbar = () => {
         </div>
 
         {/* Navbar Center for Larger Screens */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+        <div className="navbar-center  hidden lg:flex">
+          <ul className="menu menu-horizontal  px-1">
             {NavLinkcenter}
           </ul>
         </div>
@@ -81,7 +82,7 @@ const Navbar = () => {
             // <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
             //   <p>{loggedUser?.name}</p> Logout
             // </button>
-            <button onClick={toggleDropDown} className="rounded-full w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16  text-base font-semibold text-[#FFFFFF] bg-[#03A9F4] text-center">user</button>
+            <button onClick={toggleDropDown} className="rounded-full border-[#1076FF] border-2 w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16  text-base font-semibold text-[#FFFFFF] bg-[#03A9F4] text-center"><img className=" rounded-full " src={userImg} alt="" /></button>
           ) : (
             <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
           )}

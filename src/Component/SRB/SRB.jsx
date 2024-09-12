@@ -98,9 +98,9 @@ const SRB = () => {
              <th className=""></th>
             
              <th className=" "> Item Name  </th>
-             <th className=" "> Added Item </th>
+             <th className=" "> Quantity (In) </th>
              <th className=" "> Ledger Serial No </th> 
-             <th className=" ">Action</th>
+             
              
              
              </tr>

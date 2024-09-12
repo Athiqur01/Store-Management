@@ -79,7 +79,7 @@ const AddItem = () => {
         const item={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
         }
 
-        const itemSrb={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
+        const itemSrb={itemName, description, catagory,addItemData, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
         }
         const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,addedBy,entryDate,srbSerialNo
         }
