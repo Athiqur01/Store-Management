@@ -2,18 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../useAxiosSecure/useAxiosSecure";
+import useAdmin from "../useAdmin/useAdmin";
 
 
 const UserManagement = () => {
     const [status, setStatus]=useState({})
     const [isExist,setIsExist]=useState(false)
-    const {data:users}=useQuery({
-        queryKey:['users'],
-        queryFn:async()=>{
-            const res=await axios.get('http://localhost:5012/users')
-            return res.data
-        }
-    })
+    console.log('access',localStorage.getItem('access_token'))
+    
+    const axiosSecure=useAxiosSecure()
+    const token = localStorage.getItem('access_token');
+    const { data: users, isLoading: isUsersLoading } = useQuery({
+      queryKey: ['users'],
+      queryFn: async () => {
+          const res = await axiosSecure.get('/users');
+          return res.data;
+      },
+      enabled: !!token // Enable query only if token exists
+  });
+
+     const [isAdmin,isAdminLoading,isLoading]=useAdmin()
+     console.log('adminConfirm',isAdmin,isAdminLoading)
 
     const handleStatus=(e,id)=>{
         
@@ -31,8 +41,7 @@ const UserManagement = () => {
     const handleUpdate=(id)=>{
         console.log('status',status[id])
         const updateStatus=status[id]
-        axios
-          .patch(`http://localhost:5012/updatestatus/${id}`,{updateStatus})
+        axiosSecure.patch(`/updatestatus/${id}`,{updateStatus})
           .then((res) => {
             if(res.data){
               Swal.fire({
@@ -46,7 +55,12 @@ const UserManagement = () => {
             console.log(res);
           });
     }
-
+    if (isUsersLoading || isAdminLoading) {
+      return <p>Loading...</p>;
+  }
+  if(isLoading){
+    return <p>loading---</p>
+  }
     console.log('items:', isExist)
 
     return (
@@ -68,7 +82,7 @@ const UserManagement = () => {
         
     {/* if user status is keeper and is checked is false */}           
             {
-           users?.map((user,index)=><>
+        isAdmin && users?.map((user,index)=><>
            <tr className="lg:text-xl text-black  text-center">
            <th className="hidden md:table-cell lg:table-cell">{index+1}</th>
            

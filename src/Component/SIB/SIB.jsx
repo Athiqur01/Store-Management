@@ -3,9 +3,10 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
 import { motion } from "framer-motion"
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 const SIB = () => {
-  const headingText = "SIB Item List";
+    const headingText = "SIB Item List";
     const {data:sib}=useQuery({
         queryKey:['sib'],
         queryFn:async()=>{
@@ -16,6 +17,10 @@ const SIB = () => {
     })
 
     console.log('sib data:', sib)
+    
+//custom hook to fetch logged user data
+    const [loggedUser]=useLoggedUser()
+    const userStatus=loggedUser?.status
 
     const generatePdf=()=>{
         const doc=new jsPDF()
@@ -70,9 +75,12 @@ const SIB = () => {
 
     return (
         <div className="flex flex-col justify-center">
-            <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
+
+          
+
+     { (userStatus==='keeper' || userStatus==='admin')? <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
                   
-                  <motion.h2
+      <motion.h2
       className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 "
     >
       {headingText.split("").map((char, index) => (
@@ -133,7 +141,7 @@ const SIB = () => {
     </tbody>
   </table>
   <div><button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button></div>
- </div>
+ </div>: <p className="text-white text-xl text-center">Warning: You are not allowed to access this section</p>}
  
                 
         </div>

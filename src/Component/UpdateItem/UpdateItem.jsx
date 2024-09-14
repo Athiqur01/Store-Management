@@ -177,7 +177,7 @@ const {data:srbSerial}=useQuery({
 
           
 
-  <table className="table max-w-[1000px]  ">
+  {loggedUser?.status==='keeper'? <table className="table max-w-[1000px]  ">
     {/* head */}
     <thead className="">
       <tr className="text-sm md:text-base font-bold text-white text-center">
@@ -215,7 +215,7 @@ const {data:srbSerial}=useQuery({
       }
       
     </tbody>
-  </table>
+  </table> : <p className="text-white text-xl">This section can only be accessed by storekeeper</p>}
 </div>
         </section>
     );

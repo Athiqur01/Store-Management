@@ -3,6 +3,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
 import { motion } from "framer-motion"
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 const SRB = () => {
   const headingText = "SRB Item List";
@@ -15,6 +16,9 @@ const SRB = () => {
         }
     })
     console.log('srbData',srbdata)
+
+    const [loggedUser]=useLoggedUser()
+    const userStatus=loggedUser?.status
 
     const generatePdf=()=>{
       const doc=new jsPDF()
@@ -66,7 +70,7 @@ const SRB = () => {
 
     return (
         <div className="flex flex-col justify-center">
-        <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
+     { (userStatus==='keeper' || userStatus==='admin')? <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
               
 
               <motion.h2
@@ -129,7 +133,7 @@ const SRB = () => {
 </tbody>
 </table>
 <button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button>
-</div>         
+</div> :<p className="text-white text-xl text-center">Warning: You are not allowed to access this section</p> }        
     </div>
     );
 };

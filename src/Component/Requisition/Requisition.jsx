@@ -5,12 +5,15 @@ import Swal from "sweetalert2";
 import Demand from "../Demand/Demand";
 import { removeItem } from "localforage";
 import { motion } from "framer-motion"
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 
 const Requisition = () => {
     const headingText = "Requisition";
     //Handle change input name
     //const [formData, setFormData] = useState({});
+    const [loggedUser]=useLoggedUser()
+    const status=loggedUser?.status
 
     const [inputData, setInputData]=useState({})
     const [colorData, setColorData]=useState({})
@@ -185,7 +188,7 @@ console.log('input data',inputData, 'color data', colorData)
       ))}
     </motion.h2>
 
-            <div className="flex flex-col lg:flex-row gap-4 ">
+            {(status==='member' || status==='keeper') && <div className="flex flex-col lg:flex-row gap-4 ">
 
               {/* left side start */}
               <div className="px-2 flex flex-col mt-0 md:mt-11 lg:mt-11  w-[100%] md:w-[20%] lg:w-[20%] ">
@@ -245,7 +248,7 @@ console.log('input data',inputData, 'color data', colorData)
             <td>{item.itemName}</td>
             <td>{item.quantity}</td>
             <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-12 text-black text-center rounded-sm '  /> </td>
-            <td className=""><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-12 max-h-5 md:max-h-7 lg:max-h-7 text-black rounded-sm   "></textarea></td>
+            <td className=""><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-12 max-h-5 md:max-h-7 lg:max-h-7  text-black rounded-sm   "></textarea></td>
             <td><button onClick={()=>handleSendData(item)} className=" px-2 py-1 rounded-md bg-[#4CAF50]">Send</button></td>
             
             </tr>
@@ -266,7 +269,7 @@ console.log('input data',inputData, 'color data', colorData)
                <Demand></Demand>
                 {/* Right side End */}
 
-            </div>
+            </div>}
 
         </section>
     );

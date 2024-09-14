@@ -26,6 +26,8 @@ import ItemCatalog from './Component/ItemCatalog/ItemCatalog';
 import Deshboard from './Component/Deshboard/Deshboard';
 import Profile from './Component/Profile/Profile';
 import UserManagement from './Component/userManagement/UserManagement';
+import PrivateRoute from './Component/PrivateRoute/PrivateRoute';
+import MyRequisition from './Component/MyRequisition/MyRequisition';
 
 
 
@@ -41,16 +43,16 @@ const router = createBrowserRouter([
       },
       {
         path:'/addItem',
-        element:<AddItem></AddItem>,
+        element:<PrivateRoute><AddItem></AddItem></PrivateRoute>,
         
       },
       {
         path:'/updateItem',
-        element:<UpdateItem></UpdateItem>
+        element:<PrivateRoute><UpdateItem></UpdateItem></PrivateRoute>
       },
       {
         path:'/requisition',
-        element:<Requisition></Requisition>
+        element:<PrivateRoute><Requisition></Requisition></PrivateRoute>
       },
       {
         path:"/request",
@@ -70,11 +72,11 @@ const router = createBrowserRouter([
       },
       {
         path:'/sib',
-        element:<SIB></SIB>
+        element:<PrivateRoute><SIB></SIB></PrivateRoute>
       },
       {
         path:'/ledger',
-        element:<Ledger></Ledger>
+        element:<PrivateRoute><Ledger></Ledger></PrivateRoute>
       },
       {
         path:'/ledger/:name',
@@ -82,7 +84,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/srb',
-        element:<SRB></SRB>
+        element:<PrivateRoute><SRB></SRB></PrivateRoute>
       },
       {
         path:'/reqregester',
@@ -94,7 +96,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/catalog',
-        element:<ItemCatalog></ItemCatalog>
+        element:<PrivateRoute><ItemCatalog></ItemCatalog></PrivateRoute>
       },
     ]
   },
@@ -110,6 +112,10 @@ const router = createBrowserRouter([
       {
         path:'/deshboard/user',
         element:<UserManagement></UserManagement>
+      },
+      {
+        path:'/deshboard/requisition',
+        element:<MyRequisition></MyRequisition>
       },
     ]
   }

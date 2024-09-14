@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"
 
+
 const RequisitionRegister = () => {
 
   const headingText = "Requisition Register";
@@ -14,9 +15,8 @@ const RequisitionRegister = () => {
         }
     })
 
-   
-    
-    
+    console.log('req',requisition)
+  
 
 
     return (
@@ -51,6 +51,7 @@ const RequisitionRegister = () => {
                  <tr className="text-sm md:text-base font-bold text-white text-center">
                  <th className=""></th>
                  <th>Approval Date</th>
+                 <th>Requisited By</th>
                  <th className=" ">Action</th>
             
                  </tr>
@@ -64,6 +65,7 @@ const RequisitionRegister = () => {
            <tr className="lg:text-xl text-white  text-center">
            <th className="">{index+1}</th>
            <td>{item?.registerData?.approvalDate}</td>
+           <td>{item?.registerData?.requisitionBy}</td>
            <td><Link to={`/download/${item?._id}`}><button className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50]">View Detail</button></Link></td>
  
            </tr>

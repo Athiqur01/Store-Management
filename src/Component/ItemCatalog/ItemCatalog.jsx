@@ -1,9 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion"
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
+import { p } from "framer-motion/client";
 
 
 const ItemCatalog = () => {
+
+  const [loggedUser]=useLoggedUser()
+  console.log('loooo',loggedUser)
+
     const headingText = "Item Catalogue";
     const {data:items}=useQuery({
         queryKey:['items'],
@@ -12,7 +18,7 @@ const ItemCatalog = () => {
             return res.data
         }
     })
-    console.log('items:',items[0])
+    
     
     return (
         <div className="text-white overflow-x-auto py-6 lg:py-10 px-2 ">
@@ -40,7 +46,7 @@ const ItemCatalog = () => {
     </motion.h2>
 
   <div className="flex justify-center">
-  <table className="table max-w-[900px]">
+  {loggedUser?.status==='user'? <p>You are not allowed to access this Section</p>: <table className="table max-w-[900px]">
     {/* head */}
     <thead>
       <tr className="text-lg font-bold text-center">
@@ -67,7 +73,7 @@ const ItemCatalog = () => {
       }
       
     </tbody>
-  </table>
+  </table>}
   </div>
 </div>
     );

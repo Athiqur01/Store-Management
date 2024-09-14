@@ -7,6 +7,7 @@ import { Link, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { GiToken } from "react-icons/gi";
 
 
 const Deshboard = () => {
@@ -35,6 +36,8 @@ const Deshboard = () => {
              
              {userStatus==='admin' && <Link to='/deshboard/user'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><IoSettingsOutline /> User Management</button></Link>}
              <button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><RxUpdate />Update Profile</button>
+             <Link to='/deshboard/requisition'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><GiToken />My Requisition</button></Link>
+             
              <Link to='/'><button className="flex justify-center items-center gap-1 md:gap-2 lg:gap-2"><FaHome />Home</button></Link>
 
             </div>

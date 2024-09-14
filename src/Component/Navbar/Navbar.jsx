@@ -5,6 +5,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { button } from "framer-motion/client";
 import userImg from '../../assets/user2.jpg'
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 
 const Navbar = () => {
@@ -13,19 +14,7 @@ const Navbar = () => {
    
     
     //get operation to fetch user
-    const {data:loggedUser}=useQuery({
-        queryKey:['loggedUser'],
-        queryFn:async()=>{
-          const res=await axios.get(`http://localhost:5012/user?email=${user?.email}`)
-          return res.data
-        },
-        enabled: !!(user?.email),
-        retry: 2,
-        refetchOnWindowFocus: true, // Consider enabling this if you want to ensure up-to-date data
-        refetchOnMount: true, // Ensure data is fetched every time the component mounts
-        staleTime: 0, // Disable caching to always fetch fresh data
-    })
-
+    const [loggedUser]=useLoggedUser()
 // if(!(user?.email)){
 //   return <p>loading---</p>
 // }
@@ -90,7 +79,7 @@ const Navbar = () => {
           {/* dropdown */}
           <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState? 'display':'hidden'}`}>
         <ul onClick={toggleDropDown} className="p-4 font-bold text-white">
-            <button className="btn btn-ghost w-full text-left"><li>user name</li></button>
+            <button className="btn btn-ghost w-full text-left"><li>{loggedUser?.name}</li></button>
             <Link to='/deshboard'><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
             <button className="btn btn-ghost w-full text-left"><li onClick={logOut}>Log Out</li></button>
             

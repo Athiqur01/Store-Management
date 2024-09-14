@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { motion } from "framer-motion"
+import { p } from "framer-motion/client";
 
 
 
@@ -13,6 +14,7 @@ const AddItem = () => {
     const {user}=useContext(AuthContext)
     //const {count}=useLoaderData()
     const [errorMessage, setErrorMessage]=useState(false)
+   
     //get operation to fetch user
     const {data:loggedUser}=useQuery({
         queryKey:['loggedUser'],
@@ -36,7 +38,7 @@ const AddItem = () => {
         }
     })
  
-    console.log('ledgerSerial:', ledgerSerial)
+    console.log('ledgerSerial:', loggedUser?.status)
 
   // count srb serial no number----
   const {data:srbSerial}=useQuery({
@@ -84,6 +86,7 @@ const AddItem = () => {
         const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,addedBy,entryDate,srbSerialNo
         }
         console.log('ledger',itemLedger)
+        
 
         if(!isNAN){
           //  post operation in items collection----
@@ -136,7 +139,8 @@ const AddItem = () => {
             });
           }
         })
-          
+         
+        setErrorMessage(false)
         }
 
         else{
@@ -181,7 +185,7 @@ const AddItem = () => {
       ))}
     </motion.h2>
 
-            <div className="border-white border-2 rounded-md mx-2">
+            {loggedUser?.status==='keeper'? <div className="border-white border-2 rounded-md mx-2">
                 <form  onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 p-10 "   >
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Name</label>
                 <input type="text"  {...register("itemName", { required: true })} placeholder="Item Name" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out" required />
@@ -231,10 +235,11 @@ const AddItem = () => {
 
                     <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Description</label>
                 <textarea   id="" {...register("description", { required: true })} placeholder=" Description like brand, model etc." className="w-full rounded-lg h-16 p-4 text-black hover:scale-105 transition duration-300 ease-in-out"></textarea>
+                
                         
                 <button type="submit" className='px-4 py-2 bg-[#03A9F4] text-white rounded-md  border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold hover:scale-110 '>Save Item</button>
                 </form>
-                </div>
+                </div> : <p className="text-white text-xl">This section can only be accessed by storekeeper</p>}
         </section>
     );
 };

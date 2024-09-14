@@ -3,6 +3,8 @@ import axios from "axios";
 import {useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react";
+import { div } from "framer-motion/client";
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 
 const Ledger = () => {
@@ -13,7 +15,9 @@ const Ledger = () => {
 
     console.log('iuy',items)
 
-   
+   //custom hook to fetch logged user data
+   const [loggedUser]=useLoggedUser()
+   const userStatus=loggedUser?.status
 
     //count item from item collection to set ledger serial no
     const {data:ledgerSerial, refetch}=useQuery({
@@ -56,7 +60,9 @@ const pages=[]
     }
 
     return (
-        <div className="flex flex-col justify-center">
+        <div>
+          
+           {(userStatus==='keeper' || userStatus==='admin')? <div className="flex flex-col justify-center">
             <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
                   
                   <motion.h2
@@ -111,8 +117,6 @@ const pages=[]
          </>)
       }
 
-
-      
     </tbody>
   </table>
   
@@ -129,6 +133,8 @@ const pages=[]
             </div>
  </div>
                 
+        </div>: <p className="text-white text-xl text-center">Warning: You are not allowed to access this section</p>}
+          
         </div>
     );
 };
