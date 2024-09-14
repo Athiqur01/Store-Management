@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { motion } from "framer-motion"
@@ -14,6 +14,7 @@ const AddItem = () => {
     const {user}=useContext(AuthContext)
     //const {count}=useLoaderData()
     const [errorMessage, setErrorMessage]=useState(false)
+    const [errorMessage2, setErrorMessage2]=useState(false)
    
     //get operation to fetch user
     const {data:loggedUser}=useQuery({
@@ -64,6 +65,7 @@ const AddItem = () => {
         const description=itemInfo?.description
         const catagory= itemInfo?.category
         const quantity= itemInfo?.quantity
+        const minimumQuantity= itemInfo?.minimumQuantity
         const balance= itemInfo?.quantity
         const addItemData= itemInfo?.quantity
         const storeLocation=itemInfo?.storeLocation
@@ -76,9 +78,11 @@ const AddItem = () => {
 
         const parseQuantity=parseInt(quantity)
         const isNAN=isNaN(parseQuantity)
+        const parseMinQuantity=parseInt(minimumQuantity)
+        const isNANMinQuantity=isNaN(parseMinQuantity)
        
         
-        const item={itemName, description, catagory, quantity, storeLocation,ledgerSerialNo
+        const item={itemName, description, catagory, quantity,minimumQuantity, storeLocation,ledgerSerialNo
         }
 
         const itemSrb={itemName, description, catagory,addItemData, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
@@ -86,9 +90,23 @@ const AddItem = () => {
         const itemLedger={itemName, description, catagory,addItemData, balance, storeLocation,ledgerSerialNo,addedBy,entryDate,srbSerialNo
         }
         console.log('ledger',itemLedger)
-        
 
         if(!isNAN){
+           setErrorMessage(false)
+        }
+        else{
+          setErrorMessage(true)
+        }
+
+        if(!isNANMinQuantity){
+          setErrorMessage2(false)
+        }
+        else{
+          setErrorMessage2(true)
+        }
+        
+
+        if(!isNAN && !isNANMinQuantity){
           //  post operation in items collection----
         axios.post('http://localhost:5012/addItem',item)
         .then(res=>{
@@ -140,11 +158,11 @@ const AddItem = () => {
           }
         })
          
-        setErrorMessage(false)
+        
         }
 
         else{
-          setErrorMessage(true)
+         console.log('not ok')
         }
         
        
@@ -216,6 +234,19 @@ const AddItem = () => {
                       insert a number
                     </p>
                   )}
+
+                {/* Minimum Quantity */}
+                <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Minimum Quantity</label>
+                <input type="text" {...register("minimumQuantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " />
+
+                {errorMessage2 && (
+                    <p className="text-red-300">
+                      <br />
+                      insert a number
+                    </p>
+                  )}
+
+
 
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Store Name</label>
                 <Controller

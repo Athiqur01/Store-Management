@@ -28,6 +28,10 @@ const Ledger = () => {
       }
   })
 
+
+ 
+
+
   console.log('ledgerSerial:', ledgerSerial?.totalItems)
 //Pagenation---------------------
 const count=ledgerSerial?.totalItems

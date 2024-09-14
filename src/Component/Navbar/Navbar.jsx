@@ -19,6 +19,16 @@ const Navbar = () => {
 //   return <p>loading---</p>
 // }
 
+const {data:itemMessage, refetch}=useQuery({
+  queryKey:['itemMessage'],
+  queryFn:async ()=>{
+      const res=await axios.get('http://localhost:5012/itemmessage')
+      return res.data
+  }
+})
+
+console.log('itemMess',itemMessage)
+
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
