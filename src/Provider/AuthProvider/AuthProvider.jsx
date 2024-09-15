@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { app } from "../../firebase/firebase.config";
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,10 @@ export const AuthContext=createContext(null)
 const auth=getAuth(app)
 const AuthProvider = ({children}) => {
 
-
+    const dropdownRef = useRef(null)
     const [user, setUser]=useState(null)
     const [loading, setLoading]=useState(true)
+    const [dropDownState, setDropDownState]=useState(false)
     
     const createUser=(email,password)=>{
           setLoading(true)
@@ -53,7 +54,7 @@ const AuthProvider = ({children}) => {
     },[])
 
 
-    const authInfo={user,setUser,loading, createUser,loginUser,logOut}
+    const authInfo={user,setUser,loading, createUser,loginUser,logOut,dropdownRef,dropDownState, setDropDownState}
 
     return (
         <AuthContext.Provider value={authInfo}>

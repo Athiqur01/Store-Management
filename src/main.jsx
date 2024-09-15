@@ -28,6 +28,7 @@ import Profile from './Component/Profile/Profile';
 import UserManagement from './Component/userManagement/UserManagement';
 import PrivateRoute from './Component/PrivateRoute/PrivateRoute';
 import MyRequisition from './Component/MyRequisition/MyRequisition';
+import Error from './Component/Error/Error';
 
 
 
@@ -35,6 +36,7 @@ const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement:<Error></Error>,
     element: <Root></Root>,
     children:[
       {

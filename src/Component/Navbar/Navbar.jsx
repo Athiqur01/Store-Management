@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import axios from "axios";
@@ -7,15 +7,18 @@ import { button } from "framer-motion/client";
 import userImg from '../../assets/user2.jpg'
 import useLoggedUser from "../useLoggedUser/useLoggedUser";
 import { IoNotificationsCircleSharp } from "react-icons/io5";
+import mic from '../../assets/mic.png'
+import { FaUserCircle } from "react-icons/fa";
 
 
 const Navbar = () => {
 
-    const {user,logOut}=useContext(AuthContext)
+    const {user,logOut,dropdownRef,dropDownState, setDropDownState}=useContext(AuthContext)
    
     
     //get operation to fetch user
     const [loggedUser]=useLoggedUser()
+    const userStatus=loggedUser?.status
 // if(!(user?.email)){
 //   return <p>loading---</p>
 // }
@@ -33,25 +36,35 @@ console.log('itemMess',itemMessage)
 const orderedList=itemMessage?.slice().sort((a,b)=>Date.parse(b.lastOut)-Date.parse(a.lastOut))
 console.log('order',orderedList)
 
-//toggle notification dropdown
-const [notificationDropdown, setNotificationDropdown]=useState(false)
-const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
-//console.log('drop',dropDownState)
 
-
-    const NavLinkcenter=<>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
-                    <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
-                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Request</NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink> 
-                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><small className="text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ">{itemMessage?.length}</small></NavLink> 
-                  </>
-                    // State for mobile dropdown menu
+                 // State for mobile dropdown menu
   // State for mobile dropdown menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // Sub-menu state
-  const [dropDownState, setDropDownState]=useState(false)
+  //toggle notification dropdown
+  const [notificationDropdown, setNotificationDropdown]=useState(false)
+
   
+  
+   // Ref to detect outside click
+
+  // Function to handle click outside
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      //setDropDownState(false); // Close the dropdown when clicking outside
+      setIsSubMenuOpen(false)
+      setIsMobileMenuOpen(false)
+      setNotificationDropdown(false)
+    }
+  };
+
+  // Add event listener to listen for outside clicks
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // Cleanup listener
+    };
+  }, []);
   
 
   // Toggle mobile menu
@@ -60,6 +73,18 @@ const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
   // Toggle sub-menu
   const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
   const toggleDropDown=()=>setDropDownState(!dropDownState)
+  const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
+  
+
+
+    const NavLinkcenter=<>
+                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
+                    <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
+                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Request</NavLink>
+                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink> 
+                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><small className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</small></NavLink> 
+                  </>
+   
   
 
     return (
@@ -76,7 +101,7 @@ const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
               </svg>
             </div>
           </div>
-          <Link to='/' className="btn btn-ghost px-4 py-2 text-xl font-semibold text-[#FFFFFF] hover:text-[#03A9F4]  transition duration-300 ease-in-out rounded-md">BBM Inventory Management</Link>
+          <Link to='/' className="btn btn-ghost px-4 py-2 text-xl font-semibold text-[#FFFFFF] hover:text-[#03A9F4]  transition duration-300 ease-in-out rounded-md"><img className="w-6 h-8" src={mic} alt="" /> BBM Inventory Management</Link>
         </div>
 
         {/* Navbar Center for Larger Screens */}
@@ -104,13 +129,13 @@ const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
             // <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
             //   <p>{loggedUser?.name}</p> Logout
             // </button>
-            <button onClick={toggleDropDown} className="rounded-full border-[#1076FF] border-2 w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16  text-base font-semibold text-[#FFFFFF] bg-[#03A9F4] text-center"><img className=" rounded-full " src={userImg} alt="" /></button>
+            <button onClick={toggleDropDown} className="rounded-full  w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16   font-semibold text-[#FFFFFF] text-center text-4xl lg:text-5xl"><FaUserCircle /></button>
           ) : (
             <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
           )}
 
           {/* dropdown */}
-          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState? 'display':'hidden'}`}>
+          <div ref={dropdownRef} id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState? 'display':'hidden'}`}>
         <ul onClick={toggleDropDown} className="p-4 font-bold text-white">
             <button className="btn btn-ghost w-full text-left"><li>{loggedUser?.name}</li></button>
             <Link to='/deshboard'><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>

@@ -9,10 +9,13 @@ import 'swiper/css/navigation';
 // import required modules
 import { Navigation, Autoplay } from 'swiper/modules'; // Import Autoplay
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
 
 const Banner = () => {
+  const {dropdownRef,}=useContext(AuthContext)
   return (
-    <div>
+    <div ref={dropdownRef}>
       <Swiper
         navigation={true}
         modules={[Navigation, Autoplay]} // Add Autoplay module
@@ -26,7 +29,8 @@ const Banner = () => {
 
         <SwiperSlide>
           <div
-            className="bg-cover bg-no-repeat w-full h-[550px] h-[600px] flex flex-col items-center justify-center space-y-6 rounded-b-lg"
+             ref={dropdownRef}
+            className="bg-cover bg-no-repeat w-full min-h-[650px] flex flex-col items-center justify-center space-y-6 rounded-b-lg"
             style={{ backgroundImage: `url(${banner2})` }}
           >
             <div className="flex flex-col md:flex-row lg:flex-row space-x-3 space-y-3 md:space-y-0 w-full justify-center items-center">
@@ -39,7 +43,7 @@ const Banner = () => {
 
         <SwiperSlide>
           <div
-            className="bg-cover bg-no-repeat w-full h-[550px] h-[600px] py-40 flex flex-col items-center justify-center space-y-6 rounded-b-lg"
+            className="bg-cover bg-no-repeat w-full min-h-[650px]  py-40 flex flex-col items-center justify-center space-y-6 rounded-b-lg"
             style={{ backgroundImage: `url(${banner})` }}
           >
             

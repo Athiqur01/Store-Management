@@ -72,13 +72,13 @@ const {
                 
 
                 <label className="input input-bordered flex items-center gap-2">
-                <input onClick={handleShowPassword} type="password" name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
+                <input onClick={handleShowPassword} type={showPassword? 'text':'password'} name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
                 <span className="text-2xl">{showPassword? <FaEyeSlash />:<FaEye />} </span>
                 </label>
 
 
                 <label htmlFor="">
-                <button type="submit" className='px-4 pt-2 mt-6 mb-3 text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
+                <button type="submit" className='px-4 py-2 mt-6 mb-3 text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
                 </label>
                 </form>
                 <p className="pb-6 text-white">if not registered, please <span className="text-blue-300 font-bold"><Link to='/register'>Register</Link></span></p>
