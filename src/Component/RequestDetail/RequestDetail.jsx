@@ -213,6 +213,7 @@ const RequestDetail = () => {
         const {itemName,purpose,demand,ledgerSerialNo}=item
         const encodedItemName=encodeURIComponent(itemName)
         const balance= parseInt(quantity)-parseInt(demand)
+        const lastOut=currentDate.toLocaleDateString();
         const sibData={itemName,purpose,quantity,demand,balance,ledgerSerialNo,approvalDate,sibSerialNo}
     
         console.log('demand', demand )
@@ -235,7 +236,7 @@ const RequestDetail = () => {
         
          //Patch operation--------
     
-         axios.patch(`http://localhost:5012/balance?q=${itemName}`,{balance})
+         axios.patch(`http://localhost:5012/balance?q=${itemName}`,{balance,lastOut})
          .then(res=>{
           console.log('update',res.data)
          })

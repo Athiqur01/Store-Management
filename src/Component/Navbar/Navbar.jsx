@@ -82,11 +82,12 @@ const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
             {NavLinkcenter}
           </ul>
           {/* dropdown for check notification start */}
-          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 right-10 ${notificationDropdown? 'display':'hidden'}`}>
+          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[335px] duration-1000 delay-1000 right-10 ${notificationDropdown? 'display':'hidden'} min-h-60 max-h-64 overflow-y-auto`}>
         <ul onClick={toggleNofification} className="p-4 font-bold text-white">
-            <button className="btn btn-ghost w-full text-left"><li>{loggedUser?.name}</li></button>
-            <Link to='/deshboard'><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
-            <button className="btn btn-ghost w-full text-left"><li onClick={logOut}>Log Out</li></button>
+            {itemMessage?.map(item=><>
+            <li className="bg-[#7B1Fbf] p-2 rounded-md mb-2">Stock level of <span className="text-red-400">{item?.itemName}</span> is low. Current stock is <span className="text-red-400">{item?.quantity
+            }</span></li>
+            </>)}
             
         </ul>
        </div>

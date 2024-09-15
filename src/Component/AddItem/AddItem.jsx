@@ -75,6 +75,7 @@ const AddItem = () => {
         const entryDate= new Date().toISOString().split('T')[0];
         const {totalItems}=srbSerial
         const srbSerialNo=parseInt(totalItems)+1
+        const lastOut=''
 
         const parseQuantity=parseInt(quantity)
         const isNAN=isNaN(parseQuantity)
@@ -82,8 +83,7 @@ const AddItem = () => {
         const isNANMinQuantity=isNaN(parseMinQuantity)
        
         
-        const item={itemName, description, catagory, quantity,minimumQuantity, storeLocation,ledgerSerialNo
-        }
+        const item={itemName, description, catagory, quantity,minimumQuantity, storeLocation,ledgerSerialNo, lastOut }
 
         const itemSrb={itemName, description, catagory,addItemData, quantity, storeLocation,ledgerSerialNo,addedBy,entryDate
         }
