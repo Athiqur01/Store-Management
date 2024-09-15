@@ -16,9 +16,11 @@ const SIB = () => {
         }
     })
 
-    console.log('sib data:', sib)
+
     
-//custom hook to fetch logged user data
+
+    console.log('sib data:', sib)
+//custom hook to fetch logged user
     const [loggedUser]=useLoggedUser()
     const userStatus=loggedUser?.status
 

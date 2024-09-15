@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { button } from "framer-motion/client";
 import userImg from '../../assets/user2.jpg'
 import useLoggedUser from "../useLoggedUser/useLoggedUser";
+import { IoNotificationsCircleSharp } from "react-icons/io5";
 
 
 const Navbar = () => {
@@ -19,7 +20,7 @@ const Navbar = () => {
 //   return <p>loading---</p>
 // }
 
-const {data:itemMessage, refetch}=useQuery({
+const {data:itemMessage}=useQuery({
   queryKey:['itemMessage'],
   queryFn:async ()=>{
       const res=await axios.get('http://localhost:5012/itemmessage')
@@ -29,18 +30,26 @@ const {data:itemMessage, refetch}=useQuery({
 
 console.log('itemMess',itemMessage)
 
+//toggle notification dropdown
+const [notificationDropdown, setNotificationDropdown]=useState(false)
+const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
+//console.log('drop',dropDownState)
+
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
                     <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
                     <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Request</NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink> 
+                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><small className="text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ">{itemMessage?.length}</small></NavLink> 
                   </>
                     // State for mobile dropdown menu
   // State for mobile dropdown menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // Sub-menu state
   const [dropDownState, setDropDownState]=useState(false)
+  
+  
 
   // Toggle mobile menu
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -48,7 +57,7 @@ console.log('itemMess',itemMessage)
   // Toggle sub-menu
   const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
   const toggleDropDown=()=>setDropDownState(!dropDownState)
-  console.log('drop',dropDownState)
+  
 
     return (
       <div>
@@ -68,10 +77,20 @@ console.log('itemMess',itemMessage)
         </div>
 
         {/* Navbar Center for Larger Screens */}
-        <div className="navbar-center  hidden lg:flex">
+        <div className="navbar-center relative  hidden lg:flex">
           <ul className="menu menu-horizontal  px-1">
             {NavLinkcenter}
           </ul>
+          {/* dropdown for check notification start */}
+          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 right-10 ${notificationDropdown? 'display':'hidden'}`}>
+        <ul onClick={toggleNofification} className="p-4 font-bold text-white">
+            <button className="btn btn-ghost w-full text-left"><li>{loggedUser?.name}</li></button>
+            <Link to='/deshboard'><button className="btn btn-ghost w-full text-left"><li>Deshboard</li></button></Link>
+            <button className="btn btn-ghost w-full text-left"><li onClick={logOut}>Log Out</li></button>
+            
+        </ul>
+       </div>
+          {/* dropdown for check notification end */}
         </div>
 
         {/* Navbar End */}
