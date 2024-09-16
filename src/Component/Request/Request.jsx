@@ -109,7 +109,7 @@ if(!loggedUser){
    </figure>
    <div className="card-body">
      <h2 className="card-title">Requisition</h2>
-     <p>Request From </p>
+     <p>Request From <span className='text-[#4CAF50]'>{item?.requisitionBy}</span></p>
      <div className="card-actions justify-end">
        <Link to={`/request/${item?._id}`}><button className="btn btn-primary">View Detail</button></Link>
      </div>

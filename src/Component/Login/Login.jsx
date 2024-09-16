@@ -1,22 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import image from '../../assets/log.jpeg'
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { em } from "framer-motion/m";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { small } from "framer-motion/client";
 
 const Login = () => {
-
+const auth=getAuth()
 const {loginUser,setUser,user}=useContext(AuthContext)
 const navigate=useNavigate()
 const [showPassword, setShowPassword]=useState(false)
+const [forgetPassError,setForgetPassError]=useState(null)
  console.log('user',user)   
+
+ 
+
 const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm()
+
+
 
   const onSubmit = (data) => {
     const {email,password}=data
@@ -38,12 +48,42 @@ const {
         }
     })
   }
+//Forget password
+  const email=watch('email')
+  const handleForgetPassword=()=>{
+    setForgetPassError('')
+    if(!email){
+      setForgetPassError('provide your email address')
+     return 
+    }
+    else if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
+      setForgetPassError('your email address is invalid')
+     return 
+    }
+    console.log('email',email)
+    sendPasswordResetEmail(auth, email)
+    .then(()=>{
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: "To reset your Password, please check your email ",
+        showConfirmButton: true,
+        
+      });
+    })
+    // .catch(error=>{
+    //   console.log(error)
+    // })
+  }
 
+//show password
   const handleShowPassword=()=>{
     setShowPassword(!showPassword)
   }
-
   console.log('pass',showPassword)
+
+  
+
     return (
         <div className="pb-10 md:pb-14 lg:pb-20">
             
@@ -67,21 +107,20 @@ const {
                     
                 <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8">
                 <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 px-10 pt-10 "   >
-               <label htmlFor=""> <input type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " /></label>
-
+               <label htmlFor=""> <input  type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " /></label>
+               {forgetPassError && <small className="text-red-400">{forgetPassError}</small>}
                 
-
                 <label className="input input-bordered flex items-center gap-2">
                 <input onClick={handleShowPassword} type={showPassword? 'text':'password'} name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
                 <span className="text-2xl">{showPassword? <FaEyeSlash />:<FaEye />} </span>
                 </label>
-
-
                 <label htmlFor="">
-                <button type="submit" className='px-4 py-2 mt-6 mb-3 text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
+                <button type="submit" className='px-4 py-2 mt-6 mb-3 w-full text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out  font-bold text-xs md:text-base lg:text-base  '>Submit</button>
                 </label>
                 </form>
-                <p className="pb-6 text-white">if not registered, please <span className="text-blue-300 font-bold"><Link to='/register'>Register</Link></span></p>
+                <p onClick={handleForgetPassword} className="text-red-400 font-bold">Forget Password</p>
+                <p className="pb-6 text-white">If not registered, please <span className="text-blue-300 font-bold"><Link to='/register'>Register</Link></span></p>
+                
                 </div>
                 </div>
             </div>

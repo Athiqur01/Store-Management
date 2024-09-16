@@ -23,6 +23,29 @@ const Navbar = () => {
 //   return <p>loading---</p>
 // }
 
+
+//store Keeper data
+const {data:keeperData}=useQuery({
+  queryKey:['keeperData'],
+  queryFn:async()=>{
+      const res=await axios.get('http://localhost:5012/keeperData')
+      return res.data
+  }
+})
+const keeperDataCount=keeperData?.length
+console.log('keeperData',keeperData)
+//Admin data count---
+const {data:adminData}=useQuery({
+  queryKey:['adminData'],
+  queryFn:async()=>{
+      const res=await axios.get('http://localhost:5012/admindata')
+      return res.data
+  }
+})
+const adminDataCount=adminData?.length
+console.log('admindata',adminData)
+
+
 const {data:itemMessage}=useQuery({
   queryKey:['itemMessage'],
   queryFn:async ()=>{
@@ -53,7 +76,7 @@ console.log('order',orderedList)
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       //setDropDownState(false); // Close the dropdown when clicking outside
       setIsSubMenuOpen(false)
-      setIsMobileMenuOpen(false)
+      //setIsMobileMenuOpen(false)
       setNotificationDropdown(false)
     }
   };
@@ -74,15 +97,16 @@ console.log('order',orderedList)
   const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
   const toggleDropDown=()=>setDropDownState(!dropDownState)
   const toggleNofification=()=>setNotificationDropdown(!notificationDropdown)
+
   
 
 
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
                     <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
-                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Request</NavLink>
+                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' }`}>{userStatus==='keeper' && keeperDataCount>0} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink> 
-                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><small className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</small></NavLink> 
+                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</sup></NavLink> 
                   </>
    
   

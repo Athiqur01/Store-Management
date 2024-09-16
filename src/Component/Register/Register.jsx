@@ -1,14 +1,16 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import image from '../../assets/register.png'
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthProvider, { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { sendEmailVerification } from "firebase/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const Register = () => {
-
+    const [showPassword, setShowPassword]=useState(false)
     const {createUser,setLoading}=useContext(AuthContext)
     
     const {
@@ -32,19 +34,32 @@ const Register = () => {
                 Swal.fire({
                     position: "top-center",
                     icon: "success",
-                    title: "Register is successful",
-                    showConfirmButton: false,
-                    timer: 3500
+                    title: "To verify the email. please check your email ",
+                    showConfirmButton: true,
+                    
                   });
       
               }
             })
+
+      sendEmailVerification(result?.user)
+      .then(()=>{
+        console.log('please check your email')
+      })
       
       }
+      
+
       })
         
         
       }
+
+      //show password
+  const handleShowPassword=()=>{
+    setShowPassword(!showPassword)
+  }
+  console.log('pass',showPassword)
 
 
 
@@ -70,16 +85,21 @@ const Register = () => {
                  >
                     
                 <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8">
-                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4  p-10 "   >
+                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4  pt-10 "   >
                 <input type="text" name='name' placeholder="Your Name" {...register("name", { required: true })} className="input input-bordered text-black w-full " />
                 <input type="text" name='Designation' {...register("designation", { required: true })} placeholder="Your Designation" className="input input-bordered text-black w-full " />
                
                 
                 <input type="text" name='email' {...register("email", { required: true })} placeholder="Your Email" className="input input-bordered text-black w-full " />
-                <input type="password" name="password" {...register("password", { required: true })} placeholder="Your Password" className="input input-bordered text-black w-full " />
-                <button type="submit" className='text-white px-4 py-2 bg-[#4CAF50] rounded-md border border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
+                {/* Password input start */}
+                <label className="input input-bordered flex items-center gap-2">
+                <input onClick={handleShowPassword} type={showPassword? 'text':'password'} name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
+                <span className="text-2xl">{showPassword? <FaEyeSlash />:<FaEye />} </span>
+                </label>
+                {/* Password input end */}
+                <button type="submit" className='text-white px-4 py-2 w-full bg-[#4CAF50] rounded-md border  border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold '>Submit</button>
                 </form>
-                <p className="pb-6 text-white">if  registered, please <span className="text-blue-300 font-bold"><Link to='/login'>Login</Link></span></p>
+                <p className="pb-10 pt-6 text-white">If  registered, please <span className="text-blue-300 font-bold"><Link to='/login'>Login</Link></span></p>
                 
                 </div>
                 </div>

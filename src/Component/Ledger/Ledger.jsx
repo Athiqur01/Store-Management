@@ -95,10 +95,9 @@ const pages=[]
                   {/* head */}
                  <thead className="">
                  <tr className="text-sm md:text-base font-bold text-white text-center">
-                 <th className=""></th>
+                 <th className=" "> Ledger Serial No </th> 
                  <th className=" "> Item Name  </th>
                  <th className=" "> Stock </th>
-                 <th className=" "> Ledger Serial No </th> 
                  <th className=" ">Action</th>   
                  </tr>
                  </thead>
@@ -109,12 +108,10 @@ const pages=[]
             {
            items?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
-           <th className="">{index+1}</th>
-           
+           <td>{item?.ledgerSerialNo}</td>        
            <td>{item?.itemName}</td>
-           <td>{item?.quantity}</td>
-           <td>{item?.ledgerSerialNo}</td>
-           <td><button onClick={()=>handleLedgerDetail(item?.itemName)}  className="font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50] hover:scale-105 transition duration-300 ease-in-out">Ledger Detail</button></td>
+           <td>{item?.quantity}</td>        
+           <td><button onClick={()=>handleLedgerDetail(item?.itemName)}  className="text-xs lg:text-base font-semibold px-3 py-2 mt-2 rounded-md bg-[#4CAF50] hover:scale-105 transition duration-300 ease-in-out">Ledger Detail</button></td>
            
            
            </tr>

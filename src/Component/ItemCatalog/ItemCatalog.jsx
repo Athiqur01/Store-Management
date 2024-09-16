@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion"
 import useLoggedUser from "../useLoggedUser/useLoggedUser";
 import { p } from "framer-motion/client";
+import { useEffect, useState } from "react";
 
 
 const ItemCatalog = () => {
@@ -18,6 +19,30 @@ const ItemCatalog = () => {
             return res.data
         }
     })
+
+    //Pagenation start -------
+  const [currentPage, setCurrentPage]=useState(0)
+  const [paginationItem,setpaginationItem]=useState(null)
+  const count =items?.length // total item count for pagination
+  console.log('srb data:', count)
+  const itemsPerPage=15
+  const totalPages=Math.ceil(count/itemsPerPage)
+  const pages=[]
+    for(let i=0; i<totalPages; i++){
+      pages?.push(i)
+
+       }
+  console.log("pages",currentPage)
+
+  useEffect(()=>{
+    fetch(`http://localhost:5012/itemCatalog?page=${currentPage}&size=${itemsPerPage}`)
+    .then(res=>res.json())
+    .then(data=>setpaginationItem(data))
+}
+
+,[currentPage,itemsPerPage])
+
+//Pagenation end -------
     
     
     return (
@@ -61,7 +86,7 @@ const ItemCatalog = () => {
      
       {/* row 2 */}
       {
-        items?.map(((item,index)=><>
+        paginationItem?.map(((item,index)=><>
         <tr className="hover hover:text-black text-white text-center">
         <th>{index+1}</th>
         <td>{item?.itemName}</td>
@@ -74,7 +99,20 @@ const ItemCatalog = () => {
       
     </tbody>
   </table>}
+  
   </div>
+  {/* Pagination button start */}
+  <div className="flex justify-center">
+ <div className='space-x-3 py-10 text-black text-xs md:text-base lg:text-base'>
+            <button onClick={()=>currentPage>0 && setCurrentPage(currentPage-1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Prev</button>
+                {pages.map(page=><>
+                                   <button onClick={()=>{setCurrentPage(page)}} className={currentPage===page? 'px-3 py-1 border-red-50 border-2 bg-[#7C4DFF] text-white ' :'px-3 py-1 border-red-50 border-2 bg-red-50 '}>{page}</button>
+                                </>)}
+            <button onClick={()=>currentPage<pages?.length && setCurrentPage(currentPage+1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Next</button>
+            
+            </div>
+ </div>
+  {/* Pagination button end */}
 </div>
     );
 };

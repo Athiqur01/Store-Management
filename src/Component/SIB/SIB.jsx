@@ -4,8 +4,10 @@ import jsPDF from "jspdf";
 import 'jspdf-autotable';
 import { motion } from "framer-motion"
 import useLoggedUser from "../useLoggedUser/useLoggedUser";
+import { useEffect, useState } from "react";
 
 const SIB = () => {
+    
     const headingText = "SIB Item List";
     const {data:sib}=useQuery({
         queryKey:['sib'],
@@ -15,12 +17,32 @@ const SIB = () => {
 
         }
     })
+  
+    //Pagenation start -------
+    const [currentPage, setCurrentPage]=useState(0)
+    const [paginationItem,setpaginationItem]=useState(null)
+    const count =sib?.length // total item count for pagination
+    console.log('sib data:', count)
+    const itemsPerPage=15
+    const totalPages=Math.ceil(count/itemsPerPage)
+    const pages=[]
+      for(let i=0; i<totalPages; i++){
+        pages?.push(i)
 
+         }
+    console.log("pages",currentPage)
 
-    
+    useEffect(()=>{
+      fetch(`http://localhost:5012/sibpage?page=${currentPage}&size=${itemsPerPage}`)
+      .then(res=>res.json())
+      .then(data=>setpaginationItem(data))
+  }
 
-    console.log('sib data:', sib)
-//custom hook to fetch logged user
+  ,[currentPage,itemsPerPage])
+
+ //Pagenation end -------
+
+    //custom hook to fetch logged user
     const [loggedUser]=useLoggedUser()
     const userStatus=loggedUser?.status
 
@@ -112,9 +134,9 @@ const SIB = () => {
                  <th>Date</th>
                  <th className=" "> Item Name  </th>
                  <th className=" "> Demand </th>
-                 <th className=" "> Ledger Serial No </th>
+                 <th className="hidden md:table-row lg:table-row"> Ledger Serial No </th>
                  <th className=" "> SIB Serial No </th>
-                 <th className=" ">Purpose  </th>
+                 <th className="hidden md:table-row lg:table-row">Purpose  </th>
                  
                  
                  </tr>
@@ -124,15 +146,15 @@ const SIB = () => {
         
     {/* if user status is keeper and is checked is false */}           
             {
-           sib?.map((item,index)=><>
+           paginationItem?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
-           <th className="">{index+1}</th>
+           <th className="">{currentPage*itemsPerPage+ index+1}</th>
            <td>{item?.approvalDate}</td>
            <td>{item?.itemName}</td>
            <td>{item?.demand}</td>
-           <td>{item?.ledgerSerialNo}</td>
+           <td className="hidden md:table-row lg:table-row">{item?.ledgerSerialNo}</td>
            <td>{item?.sibSerialNo}</td>
-           <td>{item?.purpose}</td>
+           <td className="hidden md:table-row lg:table-row">{item?.purpose}</td>
            
            </tr>
          </>)
@@ -142,7 +164,20 @@ const SIB = () => {
       
     </tbody>
   </table>
-  <div><button onClick={generatePdf} className="font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button></div>
+  <div><button onClick={generatePdf} className="text-xs md:text-base lg:text-base font-semibold px-3 py-2 mt-4 rounded-md bg-[#4CAF50]">Download</button></div>
+  {/* Pagination button start */}
+  <div className="flex justify-center">
+ <div className='space-x-3 py-10 text-black text-xs md:text-base lg:text-base'>
+            <button onClick={()=>currentPage>0 && setCurrentPage(currentPage-1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Prev</button>
+                {pages.map(page=><>
+                                   <button onClick={()=>{setCurrentPage(page)}} className={currentPage===page? 'px-3 py-1 border-red-50 border-2 bg-[#7C4DFF] text-white ' :'px-3 py-1 border-red-50 border-2 bg-red-50 '}>{page}</button>
+                                </>)}
+            <button onClick={()=>currentPage<pages?.length && setCurrentPage(currentPage+1)} className='px-3 py-1 border-red-50 border-2 bg-red-50 '>Next</button>
+            
+            </div>
+ </div>
+  {/* Pagination button end */}
+
  </div>: <p className="text-white text-xl text-center">Warning: You are not allowed to access this section</p>}
  
                 
