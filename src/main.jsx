@@ -29,6 +29,7 @@ import UserManagement from './Component/userManagement/UserManagement';
 import PrivateRoute from './Component/PrivateRoute/PrivateRoute';
 import MyRequisition from './Component/MyRequisition/MyRequisition';
 import Error from './Component/Error/Error';
+import Alart from './Component/Alart/Alart';
 
 
 
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
         path:'/catalog',
         element:<PrivateRoute><ItemCatalog></ItemCatalog></PrivateRoute>
       },
+      {
+        path:'/alart',
+        element:<PrivateRoute><Alart></Alart></PrivateRoute>
+      },
     ]
   },
 
@@ -128,7 +133,7 @@ createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
    <StrictMode>
    <AuthProvider>
-   <div className='container mx-auto max-w-[1400px] bg-[#9C27B0]'>
+   <div className='container mx-auto max-w-[1280px] bg-[#9C27B0]'>
     <RouterProvider router={router} />
     </div>
    </AuthProvider>

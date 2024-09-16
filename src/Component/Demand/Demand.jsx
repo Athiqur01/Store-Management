@@ -80,7 +80,7 @@ const Demand = () => {
             <table className="table">
                 <thead>
                     <tr className="text-sm md:text-base font-bold text-white text-center">
-                        <th></th>
+                        
                         <th>Item Name</th>
                         <th>Quantity</th>
                     </tr>
@@ -88,11 +88,11 @@ const Demand = () => {
                 <tbody>
                     {localStorageItems.map((item, index) => (
                         <tr className="lg:text-xl text-white text-center" key={item._id}>
-                            <th>{index + 1}</th>
+                            
                             <td>{item?.itemName}</td>
                             <td className="flex justify-center">
                                 <button onClick={(e) => handleDecrease(e, item)} className="text-xl bg-[#7C4DFF] px-3">-</button>
-                                <input className="bg-white min-w-6 max-w-10 text-center text-black" value={item?.demand} readOnly />
+                                <input className="bg-white min-w-6 max-w-8 text-center text-black" value={item?.demand} readOnly />
                                 <button onClick={(e) => handleIncrease(e, item)} className="bg-[#7C4DFF] px-3">+</button>
                             </td>
                         </tr>

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import Swal from "sweetalert2";
+import { AiFillDelete } from "react-icons/ai";
 
 
 const RequestDetail = () => {
@@ -115,6 +116,7 @@ const RequestDetail = () => {
   })
   .then(res => {
       console.log("Demand updated:", res.data);
+      refetch()
   })
   .catch(err => {
       console.error("Error updating demand:", err);
@@ -163,11 +165,7 @@ const RequestDetail = () => {
      
     }
 
-    
-    
-    
-
-
+ 
     // Assuming the first item in detailData contains the requisiteData array
     //const dataaa = detailData[0];
     const view = detailData?.LocalStorageItem ;
@@ -189,7 +187,7 @@ const RequestDetail = () => {
     console.log('detail Data:--- ',detailData?.LocalStorageItem[0].fullItemDetails.quantity)
 
     view.map(item=>{
-      console.log('quantity', item?.fullItemDetails?.quantity)
+      console.log('quantity', item?.demand)
     })
     console.log('viewwww', view)
 
@@ -277,22 +275,31 @@ const RequestDetail = () => {
 refetch()
 }
 
+//handle delete
+const handleDelete=(id)=>{
+  axios.delete(`http://localhost:5012/deletereq/${id}`)
+  .then(res=>{
+    console.log(res.data)
+  })
+  console.log('delete',id)
+}
    
    
 
     return (
         <div className="flex flex-col justify-center">
-            <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-10 md:py-14 lg:py-20  ">
-                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">All Items</h2>
+            <div className="text-white w-full px-2 md:px-40 lg:px-60 flex flex-col items-center py-8 md:py-12 lg:py-14  ">
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-2 md:mb-6 lg:mb-8 ">Requisition Detail </h2>
                 <table className="table   ">
                   {/* head */}
                  <thead className="">
                  <tr className="text-sm md:text-base font-bold text-white text-center">
-                 <th className=""></th>
+                 
                  <th>Item Name </th>
                  <th className=" "> Stock </th>
                  <th className=" "> Demand </th>
-                 <th className=" ">Purpose  </th>
+                 <th className="">Purpose  </th>
+                 <th className=" ">Delete  </th>
                  
                  </tr>
                  </thead>
@@ -303,11 +310,12 @@ refetch()
             {
            view?.map((item,index)=><>
            {!isChecked && userStatus==='keeper' && <tr className="lg:text-xl text-white  text-center">
-           <th className="">{index+1}</th>
+           
            <td>{item?.itemName}</td>
            <td>{item?.fullItemDetails?.quantity}</td>
-           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <p className="bg-white min-w-10 max-w-14 text-black">{item?.demand}</p> <button  className="bg-[#7C4DFF] px-3 w-10">+</button></td>
-           <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           <td className="flex text-center justify-center"><button className="text-xl bg-[#7C4DFF] px-3 w-8 ">-</button> <p className="bg-white min-w-8 max-w-10 text-black">{item?.demand}</p> <button  className="bg-[#7C4DFF] px-3 w-8 flex justify-center">+</button></td>
+           <td className=""><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           <td className="text-center"><button onClick={()=>handleDelete(item?._id)} className="bg-red-400 p-[6px] rounded-md shadow-lg transform transition-transform duration-300 hover:scale-105"><AiFillDelete /></button></td>
            
            
            </tr>}
@@ -318,11 +326,12 @@ refetch()
 {
            view?.map((item,index)=><>
            {isChecked && userStatus==='admin' && <tr className="lg:text-xl text-white  text-center">
-           <th className="">{index+1}</th>
+           
            <td>{item?.itemName}</td>
            <td>{item?.fullItemDetails?.quantity}</td>
-           <td className="flex text-center justify-center"><button onClick={()=>handleDecrease(item?._id)} className="text-xl bg-[#7C4DFF] px-3 w-10 ">-</button> <input className="bg-white min-w-10 max-w-14 text-center text-black" value={demandState?.[item?._id] || 0} readOnly />  <button onClick={()=>handleIncrease(item?._id)} className="bg-[#7C4DFF] px-3 w-10">+</button></td>
+           <td className="flex text-center  justify-center items-center"><button onClick={()=>handleDecrease(item?._id)} className="text-xl bg-[#7C4DFF] px-3 w-8 ">-</button> <input className="bg-white min-w-86 max-w-8 min-h-[27px] text-center text-black" value={item?.demand || 0} readOnly />  <button onClick={()=>handleIncrease(item?._id)} className="text-xl bg-[#7C4DFF] px-3 w-8 flex justify-center items-center">+</button></td>
            <td><p className=" text-white text-center  ">{item?.purpose}</p></td>
+           <button onClick={()=>handleDelete(item?._id)} className="bg-red-400 p-[6px] rounded-md shadow-lg transform transition-transform duration-300 hover:scale-105"><AiFillDelete /></button>
            
            
            </tr>}

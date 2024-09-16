@@ -66,6 +66,13 @@ const RequisitionAndStock = () => {
                 initial={{opacity:0, scale:.8}} 
                 whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
                 transition={{duration:1.2}}>Requisition Register</motion.div></Link>
+
+                <Link to='/alart'><motion.div 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#4CAF50] text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center" 
+                style={{ backgroundImage: `url(${reg})` }}
+                initial={{opacity:0, scale:.8}} 
+                whileInView={{opacity:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1], scale:1}} 
+                transition={{duration:1.2}}>Stock Level Alert</motion.div></Link>
             </div>
             
         </section>

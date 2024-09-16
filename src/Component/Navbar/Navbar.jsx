@@ -104,9 +104,9 @@ console.log('order',orderedList)
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
                     <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
-                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' }`}>{userStatus==='keeper' && keeperDataCount>0} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
-                    <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink> 
-                    <NavLink onClick={toggleNofification} className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-2xl"><IoNotificationsCircleSharp /> </span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</sup></NavLink> 
+                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount>0) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' }`}>{userStatus==='keeper' && keeperDataCount} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
+                    
+                    <NavLink to='/alart' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-xl"><IoNotificationsCircleSharp /> </span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</sup></NavLink> 
                   </>
    
   
@@ -134,15 +134,7 @@ console.log('order',orderedList)
             {NavLinkcenter}
           </ul>
           {/* dropdown for check notification start */}
-          <div id="drop-down" className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[335px] duration-1000 delay-1000 right-10 ${notificationDropdown? 'display':'hidden'} min-h-60 max-h-64 overflow-y-auto`}>
-        <ul onClick={toggleNofification} className="p-4 font-bold text-white">
-            {orderedList?.map(item=><>
-            <li className="bg-[#7B1Fbf] p-2 rounded-md mb-2">Stock level of <span className="text-red-400">{item?.itemName}</span> is low. Current stock is <span className="text-red-400">{item?.quantity
-            }</span></li>
-            </>)}
-            
-        </ul>
-       </div>
+          
           {/* dropdown for check notification end */}
         </div>
 

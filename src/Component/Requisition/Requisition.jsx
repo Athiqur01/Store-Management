@@ -79,19 +79,7 @@ const Requisition = () => {
         colorId.classList.remove('bg-red-500')
         setItemId(id)
       }
-      
-      
-      
-      // if(e.target.name==='demand'){
-      //   console.log('demand value',parseInt (e.target.value))
-      // }
-      // setInputData({
-      //   ...inputData,
-      //       [id]: {
-      //           ...inputData[id],
-      //           [e.target.name]: e.target.value
-      //     }
-      // })
+     
     } 
 
       const demand=colorData[itemId]?.demand
@@ -245,7 +233,7 @@ console.log('input data',inputData, 'color data', colorData)
             searchTerm?.length==0 &&  items?.map((item,index)=><>
             <tr className="lg:text-xl text-white  text-center">
             <th className="">{index+1}</th>
-            <td>{item.itemName}</td>
+            <td className="max-w-32">{item.itemName}</td>
             <td>{item.quantity}</td>
             <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-12 text-black text-center rounded-sm '  /> </td>
             <td className=""><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-12 max-h-5 md:max-h-7 lg:max-h-7  text-black rounded-sm   "></textarea></td>
