@@ -16,6 +16,7 @@ const RequestDetail = () => {
     console.log('iddddddd---',id)
 
     const navigate=useNavigate()
+    
 
     //user Status-----
     const {user}=useContext(AuthContext)
@@ -124,6 +125,18 @@ const RequestDetail = () => {
 };
 
 
+console.log('viewwww', )
+console.log('id', id)
+
+//after decrement to of single item requisition if the demand is zero the delete operation of the mother object
+if(detailData?.LocalStorageItem?.length===0){
+  axios.delete(`http://localhost:5012/deletetotal/${id}`)
+  .then(res=>{
+    console.log(res.data)
+    refetch()
+    navigate('/request')
+  })
+}
 
 
     // Handling loading state
@@ -189,7 +202,7 @@ const RequestDetail = () => {
     view.map(item=>{
       console.log('quantity', item?.demand)
     })
-    console.log('viewwww', view)
+    
 
     // update data in the sib and ledger-----
     console.log('logged user',loggedUser?.name)
@@ -280,9 +293,13 @@ const handleDelete=(id)=>{
   axios.delete(`http://localhost:5012/deletereq/${id}`)
   .then(res=>{
     console.log(res.data)
+    refetch()
   })
   console.log('delete',id)
 }
+
+
+console.log('ddd',id)
    
    
 
