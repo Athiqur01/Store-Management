@@ -58,11 +58,11 @@ const Request = () => {
 
 
 if(!keeperData ){
-  return <p>Data is loading-----</p>
+  return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
 }
 
 if(!loggedUser){
-  return <p>Data is loading-----</p>
+  return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
 }
 
      //const keeperItem=storeKeeper?.filter(i=>i?.isChecked===false)

@@ -104,9 +104,10 @@ console.log('order',orderedList)
     const NavLinkcenter=<>
                     <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
                     <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
-                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount>0) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' }`}>{userStatus==='keeper' && keeperDataCount} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
+
+                    <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount>0) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' } ${(adminDataCount===0 || keeperDataCount===0 && 'hidden')}`  }>{userStatus==='keeper' && keeperDataCount} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
                     
-                    <NavLink to='/alart' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="text-xl"><IoNotificationsCircleSharp /> </span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'}`}>{itemMessage?.length}</sup></NavLink> 
+                    <NavLink to='/alart' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="">Stock Alert</span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'} ${itemMessage?.length===0 && 'hidden'} `  }>{itemMessage?.length}</sup></NavLink> 
                   </>
    
   
@@ -166,22 +167,16 @@ console.log('order',orderedList)
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div onClick={toggleMobileMenu} className="lg:hidden bg-[#9C27B0] max-w-[150px] p-4 rounded-md">
-          <ul className="space-y-2">
-            <li><NavLink to='/' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Home</NavLink></li>
-            <li><NavLink to='/requisition' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Requisition</NavLink></li>
-            <li><NavLink to='/request' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Request</NavLink></li>
-            <li>
-              {/* Sub-menu Toggle */}
-              <button onClick={toggleSubMenu} className="block text-gray-800 p-2 rounded-md w-full text-left hover:bg-gray-200">
-                Search
-              </button>
-              {isSubMenuOpen && (
-                <ul className="pl-4 space-y-2 mt-2">
-                  <li><NavLink to='/search1' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Submenu 1</NavLink></li>
-                  <li><NavLink to='/search2' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Submenu 2</NavLink></li>
-                </ul>
-              )}
-            </li>
+          <ul className="space-y-2 text-white">
+            <li><NavLink to='/' className='block  hover:bg-gray-200 p-2 rounded-md'>Home</NavLink></li>
+            <li><NavLink to='/requisition' className='block  hover:bg-gray-200 p-2 rounded-md'>Requisition</NavLink></li>
+            <li><NavLink to='/request' className='block  hover:bg-gray-200 p-2 rounded-md'>Request</NavLink></li>
+
+            <NavLink to='/request' className='block  hover:bg-gray-200 p-2 rounded-md'><span>Request <sup className={` px-[6px] py-[1px] rounded-full text-center ${((userStatus==='keeper' && keeperDataCount>0) || (userStatus==='admin' && adminDataCount>0)) && 'bg-red-400' } ${(adminDataCount===0 || keeperDataCount===0 && 'hidden')}`  }>{userStatus==='keeper' && keeperDataCount} {userStatus==='admin' && adminDataCount}</sup></span></NavLink>
+
+            <li><NavLink to='/alart' className='block  hover:bg-gray-200 p-2 rounded-md'><span className="">Stock Alert</span><sup className={`text-xs bg-red-400 px-[6px] py-[1px] rounded-full text-center ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'} ${itemMessage?.length===0 && 'hidden'} `  }>{itemMessage?.length}</sup></NavLink></li>
+
+            
           </ul>
         </div>
       )}

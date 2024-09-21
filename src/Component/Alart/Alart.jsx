@@ -25,7 +25,7 @@ const Alart = () => {
       <div className="mx-2 md:mx-6 lg:mx-8 py-10">
        
         <motion.h2
-      className="text-white text-center text-2xl  md:text-3xl lg:text-4xl font-bold pb-4 md:pb-10"
+      className="text-white text-center text-2xl md:text-4xl lg:text-6xl font-bold pb-4 md:pb-10"
     >
       {headingText.split("").map((char, index) => (
         <motion.span

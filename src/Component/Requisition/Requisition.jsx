@@ -141,7 +141,7 @@ const Requisition = () => {
     console.log('items:',items)
 
     if(!items){
-      return <p>Data is loading------</p>
+      return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
     }
 
     //Sreach item-------
@@ -183,12 +183,15 @@ console.log('input data',inputData, 'color data', colorData)
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Search Item</h2>
                 <input onChange={handleSearchTerm} type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " />
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Item Catagory</h2>
-                <select value="" className="text-lg font-bold text-black bg-white py-2 mb-4 text-center" >
-                  <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Computer</option>
-                  <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Electric</option>
-                  <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Stationary</option>
-                  <option className="text-lg font-bold text-black bg-white py-2 mb-4 text-center">Miscellaneous</option>
-                </select>
+               
+
+                <select  className="input input-bordered font-normal text-gray-400 w-full hover:scale-105 transition duration-300 ease-in-out">
+                <option value="" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Select a category</option>
+                <option value="computer" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Computer</option>
+                <option value="electric" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Electric</option>
+                <option value="stationary" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Stationary</option>
+                <option value="miscellaneous" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Miscellaneous</option>
+              </select>
                 
                 
                 </div>

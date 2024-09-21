@@ -35,7 +35,7 @@ const Navbar = () => {
     // Toggle sub-menu
     const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
     const toggleDropDown = () => setDropDownState(!dropDownState);
-
+    
     // Effect to handle clicks outside the dropdown
     useEffect(() => {
         const handleClickOutside = (event) => {

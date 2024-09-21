@@ -76,7 +76,7 @@ const {
     // })
   }
 
-//show password
+  //show password
   const handleShowPassword=()=>{
     setShowPassword(!showPassword)
   }
@@ -109,11 +109,12 @@ const {
                 <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 px-10 pt-10 "   >
                <label htmlFor=""> <input  type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " /></label>
                {forgetPassError && <small className="text-red-400">{forgetPassError}</small>}
-                
+                {/* Password input start */}
                 <label className="input input-bordered flex items-center gap-2">
                 <input onClick={handleShowPassword} type={showPassword? 'text':'password'} name="password" placeholder="Your Password" {...register("password", { required: true })} className="grow" />
                 <span className="text-2xl">{showPassword? <FaEyeSlash />:<FaEye />} </span>
                 </label>
+                {/* Password input end */}
                 <label htmlFor="">
                 <button type="submit" className='px-4 py-2 mt-6 mb-3 w-full text-white bg-[#4CAF50] rounded-md border-2 border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out  font-bold text-xs md:text-base lg:text-base  '>Submit</button>
                 </label>

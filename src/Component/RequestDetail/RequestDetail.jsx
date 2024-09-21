@@ -141,7 +141,7 @@ if(detailData?.LocalStorageItem?.length===0){
 
     // Handling loading state
     if (isLoading) {
-        return <div>Loading...</div>;
+      return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
     }
 
     // Handling error state
