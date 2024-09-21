@@ -59,7 +59,7 @@ const RequisitionAndStock = () => {
                 initial={{opacity:0, scale:.8}} 
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.5 }}
-                transition={{duration:1.2}}>Ledger</motion.div></Link>
+                transition={{duration:1.2}}>Stock Ledger</motion.div></Link>
                 <Link className="hover:scale-105 transition duration-500" to='/reqregester'><motion.div 
                 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#4CAF50] text-center bg-[#E1BEE7] min-h-96 rounded-lg shadow-xl flex justify-center items-center bg-cover bg-center" 
                 style={{ backgroundImage: `url(${reg})` }}

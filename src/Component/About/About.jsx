@@ -39,7 +39,7 @@ const InventoryManagement = () => {
                     {/*  */}
     <motion.p
                     
-        className="text-white text-justify break-words whitespace-normal"
+        className="text-white text-justify break-words "
 >
   {paragraphText.split("").map((char, index) => (
     <motion.span

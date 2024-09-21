@@ -26,35 +26,31 @@ const Banner = () => {
         }}
       >
         
-
+     
         <SwiperSlide>
           <div
-             ref={dropdownRef}
             className="bg-cover bg-no-repeat w-full min-h-[650px] flex flex-col items-center justify-center space-y-6 rounded-b-lg"
             style={{ backgroundImage: `url(${banner2})` }}
           >
-            <div className="flex flex-col md:flex-row lg:flex-row space-x-3 space-y-3 md:space-y-0 w-full justify-center items-center">
-              
-              
-              <h2 className=" text-white text-xl lg:text-5xl font-bold text-center rounded-md md:px-6 py-2">Bangladesh Betar, Mymensingh</h2>
+            
+            <div className="flex space-x-3 w-full justify-center">
+            <Link to='/ledger'><button  className="bg-[#8255EF] text-white font-bold text-xl rounded-md md:px-6 py-2">Stock Ledger</button></Link>
             </div>
           </div>
         </SwiperSlide>
+
 
         <SwiperSlide>
           <div
-            className="bg-cover bg-no-repeat w-full min-h-[650px]  py-40 flex flex-col items-center justify-center space-y-6 rounded-b-lg"
+            className="bg-cover bg-no-repeat w-full min-h-[650px] flex flex-col items-center justify-center space-y-6 rounded-b-lg"
             style={{ backgroundImage: `url(${banner})` }}
           >
             
-            <div className="flex flex-col md:flex-row lg:flex-row space-x-3 space-y-3 md:space-y-0 w-full justify-center items-center">
-              <Link to="/apartment">
-                
-              </Link>
+            <div className="flex space-x-3 w-full justify-center">
+            <Link to='/requisition'><button  className="bg-[#8255EF] text-white font-bold text-xl rounded-md md:px-6 py-2">Requisition</button></Link>
             </div>
           </div>
         </SwiperSlide>
-
 
 
         <SwiperSlide>
@@ -64,7 +60,7 @@ const Banner = () => {
           >
             
             <div className="flex space-x-3 w-full justify-center">
-            <Link to='/requisition'><button  className="bg-[#8255EF] text-white font-bold text-xl rounded-md md:px-6 py-2">Requisition</button></Link>
+            <Link to='/addItem'><button  className="bg-[#8255EF] text-white font-bold text-xl rounded-md md:px-6 py-2">Add Item</button></Link>
             </div>
           </div>
         </SwiperSlide>
@@ -75,10 +71,12 @@ const Banner = () => {
           >
             
             <div className="flex space-x-3 w-full justify-center">
-              
+            <Link to='/reqregester'><button  className="bg-[#8255EF] text-white font-bold text-xl rounded-md md:px-6 py-2">Requisition Register</button></Link>
             </div>
           </div>
         </SwiperSlide>
+
+        
       </Swiper>
     </div>
   );
