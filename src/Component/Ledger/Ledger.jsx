@@ -35,7 +35,7 @@ const Ledger = () => {
   console.log('ledgerSerial:', ledgerSerial?.totalItems)
 //Pagenation---------------------
 const count=ledgerSerial?.totalItems
-const itemsPerPage=10
+const itemsPerPage=15
 const totalPages=Math.ceil(count/itemsPerPage)
 const pages=[]
     for(let i=0; i<totalPages; i++){
@@ -95,6 +95,7 @@ const pages=[]
                   {/* head */}
                  <thead className="">
                  <tr className="text-sm md:text-base font-bold text-white text-center">
+                 <th className=" "> </th> 
                  <th className=" "> Ledger Serial No </th> 
                  <th className=" "> Item Name  </th>
                  <th className=" "> Stock </th>
@@ -108,6 +109,7 @@ const pages=[]
             {
            items?.map((item,index)=><>
            <tr className="lg:text-xl text-white  text-center">
+           <td>{currentPage*itemsPerPage+ index+1}</td>        
            <td>{item?.ledgerSerialNo}</td>        
            <td>{item?.itemName}</td>
            <td>{item?.quantity}</td>        

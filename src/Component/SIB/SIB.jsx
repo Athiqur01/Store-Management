@@ -134,9 +134,9 @@ const SIB = () => {
                  <th>Date</th>
                  <th className=" "> Item Name  </th>
                  <th className=" "> Demand </th>
-                 <th className="hidden md:table-row lg:table-row"> Ledger Serial No </th>
                  <th className=" "> SIB Serial No </th>
-                 <th className="hidden md:table-row lg:table-row">Purpose  </th>
+                 <th className="hidden md:flex md:justify-center  lg:flex lg:justify-center"> Ledger Serial No </th>
+                 
                  
                  
                  </tr>
@@ -151,10 +151,11 @@ const SIB = () => {
            <th className="">{currentPage*itemsPerPage+ index+1}</th>
            <td>{item?.approvalDate}</td>
            <td>{item?.itemName}</td>
-           <td>{item?.demand}</td>
-           <td className="hidden md:table-row lg:table-row">{item?.ledgerSerialNo}</td>
+           <td>{item?.demand}</td> 
            <td>{item?.sibSerialNo}</td>
-           <td className="hidden md:table-row lg:table-row">{item?.purpose}</td>
+           <td className="hidden md:flex md:justify-center  lg:flex lg:justify-center">{item?.ledgerSerialNo}</td>
+           
+           
            
            </tr>
          </>)
