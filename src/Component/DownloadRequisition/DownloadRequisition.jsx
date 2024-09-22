@@ -33,101 +33,106 @@ const DownloadRequisition = () => {
    console.log('ittt',downloadData)
    console.log('daaaaaa',requisitionBy )
 
-   const generatePdf=()=>{
-    const doc=new jsPDF()
+   const generatePdf = () => {
+    const doc = new jsPDF();
     const startY = 20;
-    doc.text('The People`s Republic of Bangladesh', doc.internal.pageSize.getWidth() / 2, startY, { align: 'center' });
-    doc.text('Bangladesh Betar', doc.internal.pageSize.getWidth() / 2, startY + 7, { align: 'center' });
-    doc.text('Mymensingh', doc.internal.pageSize.getWidth() / 2, startY + 14, { align: 'center' });
-    doc.text('Requisition', doc.internal.pageSize.getWidth() / 2, startY + 26, { align: 'center' });
-    doc.text('____________', doc.internal.pageSize.getWidth() / 2, startY +28 , { align: 'center' });
-    
-    const tableColumn = [
-        'No.',
-        'Item Name',
-        'Demand',
-        'Purpose',
-        
-      ];
-      const tableRows = [];
-      downloadData?.forEach((item, index) => {
-        const itemData = [
-          index + 1,
-          item.itemName,
-          item.demand,
-          item.purpose,
-        ];
-        tableRows.push(itemData);
-      });
-      doc.autoTable({
-        head: [tableColumn],
-        body: tableRows,
-        startY: 60,
-        styles: {
-          halign: 'center', // Horizontal alignment of text (center)
-          valign: 'middle', // Vertical alignment of text (middle)
-        },
-        headStyles: {
-          fillColor: [0, 57, 107], // Set header background color
-          textColor: [255, 255, 255], // Set header text color
-          halign: 'center',
-          valign: 'middle',
-        },
-        bodyStyles: {
-          halign: 'center',
-          valign: 'middle',
-        },
-      });
-     
-      const finalY = doc.lastAutoTable.finalY ;
-
-  //second table
-  const secondTableRows = [];
-
-// First column data with multiple lines
-const firstColumnData = [
-  [
-    requisitionBy,         // First line: Name or default 'RE'
-    demanderDesignation,        // Second line: Title
-    '________________________',
-    'Requisition By'      // Third line: Approval Date or 'N/A'
-  ].join('\n'),                 // Join the array with new line characters
-];
-
-// Second column data with multiple lines
-const secondColumnData = [
-  [
-    approvedBy,            // First line: Name
-    approverDesignation,          // Second line: Title
-    approvalDate,
-    '_______________________',
-    'Approver'
-               // Third line: Date
-  ].join('\n'),                 // Join the array with new line characters
-];
-
-// Push the formatted data as a row with two columns
-secondTableRows.push([firstColumnData, secondColumnData]);
-        doc.autoTable({
-          
-          body: secondTableRows,
-          startY: finalY + 25,
-          styles: {
-            halign: 'center', // Horizontal alignment of text (center)
-            valign: 'middle', // Vertical alignment of text (middle)
-          },
-          
-          bodyStyles: {
-            halign: 'center',
-            valign: 'middle',
-            
-          },
-        });
-      
   
-      doc.save('Requisition.pdf');      
-
-}
+    // Adding header text
+    doc.text("People's Republic of Bangladesh", doc.internal.pageSize.getWidth() / 2, startY, { align: 'center' });
+    doc.text('Bangladesh Betar, Mymensingh', doc.internal.pageSize.getWidth() / 2, startY + 7, { align: 'center' });
+    doc.text('Requisition', doc.internal.pageSize.getWidth() / 2, startY + 22, { align: 'center' });
+    doc.text('____________', doc.internal.pageSize.getWidth() / 2, startY + 24, { align: 'center' });
+  
+    // Table columns and data
+    const tableColumn = ['No.', 'Item Name', 'Demand', 'Purpose'];
+    const tableRows = [];
+  
+    downloadData?.forEach((item, index) => {
+      const itemData = [
+        index + 1, // No.
+        item.itemName, // Item Name
+        item.demand, // Demand
+        item.purpose, // Purpose
+      ];
+      tableRows.push(itemData);
+    });
+  
+    // First table with white background for all rows
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 52,
+      styles: {
+        halign: 'center', // Horizontal alignment of text (center)
+        valign: 'middle', // Vertical alignment of text (middle)
+        lineWidth: 0.2, // Border thickness for the cells
+      },
+      headStyles: {
+        fillColor: [0, 0, 0], // Black background for header
+        textColor: [255, 255, 255], // White text for header
+        halign: 'center',
+        valign: 'middle',
+        lineWidth: 0.5, // Thicker border for header
+      },
+      bodyStyles: {
+        fillColor: [255, 255, 255], // White background for all rows
+        textColor: [0, 0, 0], // Black text
+        halign: 'center',
+        valign: 'middle',
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255], // Force alternate rows to have a white background too
+      },
+      tableLineWidth: 0.2, // Line width of the border
+      tableLineColor: [0, 0, 0], // Border color (black)
+    });
+  
+    const finalY = doc.lastAutoTable.finalY;
+  
+    // Second table data
+    const secondTableRows = [];
+  
+    const firstColumnData = [
+      [
+        requisitionBy, // First line: Name
+        demanderDesignation, // Second line: Designation
+        '________________________',
+        'Requisition By', // Label
+      ].join('\n'),
+    ];
+  
+    const secondColumnData = [
+      [
+        approvedBy, // First line: Name
+        approverDesignation, // Second line: Designation
+        approvalDate,
+        '_______________________',
+        'Approver', // Label
+      ].join('\n'),
+    ];
+  
+    secondTableRows.push([firstColumnData, secondColumnData]);
+  
+    // Second table with no special styles
+    doc.autoTable({
+      body: secondTableRows,
+      startY: finalY + 20,
+      styles: {
+        halign: 'center', // Horizontal alignment of text (center)
+        valign: 'middle', // Vertical alignment of text (middle)
+      },
+      bodyStyles: {
+        halign: 'center',
+        valign: 'middle',
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255], // Force alternate rows to have a white background too
+      },
+    });
+  
+    doc.save('Requisition.pdf');
+  };
+  
 
     return (
         <div className="flex flex-col justify-center">

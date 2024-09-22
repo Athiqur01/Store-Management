@@ -185,7 +185,7 @@ const {data:srbSerial}=useQuery({
         <th>Item </th>
         <th>Stock</th>
         
-        <th>Add Item</th>
+        <th>Add Quantity</th>
         
         
         <th>Action</th>

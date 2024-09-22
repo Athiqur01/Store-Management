@@ -46,56 +46,87 @@ const SIB = () => {
     const [loggedUser]=useLoggedUser()
     const userStatus=loggedUser?.status
 
-    const generatePdf=()=>{
-        const doc=new jsPDF()
-        doc.text('SIB Item List', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
-        const tableColumn = [
-            'No.',
-            'Date',
-            'Item Name',
-            'Demand',
-            'Ledger Serial No',
-            'SIB Serial No',
-            'Remark',
-          ];
-          const tableRows = [];
-          sib?.forEach((item, index) => {
-            const itemData = [
-              index + 1,
-              item.approvalDate,
-              item.itemName,
-              item.demand,
-              item.ledgerSerialNo,
-              item.sibSerialNo,
-              
-            ];
-            tableRows.push(itemData);
-          });
-          doc.autoTable({
-            head: [tableColumn],
-            body: tableRows,
-            startY: 20,
-            styles: {
-              halign: 'center', // Horizontal alignment of text (center)
-              valign: 'middle', // Vertical alignment of text (middle)
-            },
-            headStyles: {
-              fillColor: [0, 57, 107], // Set header background color
-              textColor: [255, 255, 255], // Set header text color
-              halign: 'center',
-              valign: 'middle',
-            },
-            bodyStyles: {
-              halign: 'center',
-              valign: 'middle',
-            },
-          });
-      
-          doc.save('sib_item_list.pdf');      
-
+    const generatePdf = () => {
+      const doc = new jsPDF();
+      const startY = 20;
+    
+      // Adding header text
+      doc.text("People's Republic of Bangladesh", doc.internal.pageSize.getWidth() / 2, startY, { align: 'center' });
+      doc.text('Bangladesh Betar, Mymensingh', doc.internal.pageSize.getWidth() / 2, startY + 7, { align: 'center' });
+      doc.text('SIB Item List', doc.internal.pageSize.getWidth() / 2, startY + 18, { align: 'center' });
+      doc.text('____________', doc.internal.pageSize.getWidth() / 2, startY + 20, { align: 'center' });
+    
+      // Table data
+      const tableColumn = [
+        'No.',
+        'Date',
+        'Item Name',
+        'Demand',
+        'Ledger SL No',
+        'SIB SL No',
+        'Remark',
+      ];
+      const tableRows = [];
+    
+      sib?.forEach((item, index) => {
+        const itemData = [
+          index + 1,
+          item.approvalDate,
+          item.itemName,
+          item.demand,
+          item.ledgerSerialNo,
+          item.sibSerialNo,
+        ];
+        tableRows.push(itemData);
+      });
+    
+      // Create the table
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 45,
+        styles: {
+          halign: 'center', // Horizontal alignment of text (center)
+          valign: 'middle', // Vertical alignment of text (middle)
+          lineWidth: 0.2, // Border thickness for the cells
+        },
+        headStyles: {
+          fillColor: [0, 0, 0], // Black background for header
+          textColor: [255, 255, 255], // White text for header
+          halign: 'center',
+          valign: 'middle',
+          lineWidth: 0.5, // Thicker border for header
+        },
+        bodyStyles: {
+          fillColor: [255, 255, 255], // White background for all rows
+          textColor: [0, 0, 0], // Black text
+          halign: 'center',
+          valign: 'middle',
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255], // Force alternate rows to have a white background too
+        },
+        tableLineWidth: 0.2, // Line width of the border
+        tableLineColor: [0, 0, 0], // Border color (black)
+      });
+    
+      // Adding page numbers
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i); // Go to the page
+        const pageWidth = doc.internal.pageSize.getWidth(); // Get the width of the page
+        const pageHeight = doc.internal.pageSize.getHeight(); // Get the height of the page
+        doc.text(`Page- ${i} `, pageWidth / 2, pageHeight - 10, { align: 'center' }); // Add page number at the bottom
+      }
+    
+      // Save the PDF
+      doc.save('sib_item_list.pdf');
+    };
+    
+    if(!loggedUser){
+      return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
     }
-
-
+    
 
     return (
         <div className="flex flex-col justify-center">

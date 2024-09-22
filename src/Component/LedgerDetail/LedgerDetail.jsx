@@ -3,11 +3,13 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
+import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
 
 const LedgerDetail = () => {
 
     const {name}=useParams()
+    const [loggedUser]=useLoggedUser()
     const decodedName=decodeURIComponent(name)
     console.log('name:',name, decodedName)
 
@@ -23,14 +25,21 @@ const LedgerDetail = () => {
 
     const generatePdf=()=>{
       const doc=new jsPDF()
-      doc.text(decodedName, doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
+      
+      const startY = 20;
+    
+      // Adding header text
+      doc.text("People's Republic of Bangladesh", doc.internal.pageSize.getWidth() / 2, startY, { align: 'center' });
+      doc.text('Bangladesh Betar, Mymensingh', doc.internal.pageSize.getWidth() / 2, startY + 7, { align: 'center' });
+      doc.text(decodedName, doc.internal.pageSize.getWidth() / 2, startY + 18, { align: 'center' });
+      doc.text('______________________', doc.internal.pageSize.getWidth() / 2, startY + 20, { align: 'center' });
       const tableColumn = [
           'No.',
           'Entry Date', 
-          'Amount(In)',
+          'Amount (In)',
           'Srb Serial No',
           'Exit Date',
-          'Amount(Out)',
+          'Amount (Out)',
           'Sib Serial No',
           'Balance',
           'Remarks',
@@ -50,28 +59,52 @@ const LedgerDetail = () => {
           ];
           tableRows.push(itemData);
         });
-        doc.autoTable({
-          head: [tableColumn],
-          body: tableRows,
-          startY: 20,
-          styles: {
-            halign: 'center', // Horizontal alignment of text (center)
-            valign: 'middle', // Vertical alignment of text (middle)
-          },
-          headStyles: {
-            fillColor: [0, 57, 107], // Set header background color
-            textColor: [255, 255, 255], // Set header text color
-            halign: 'center',
-            valign: 'middle',
-          },
-          bodyStyles: {
-            halign: 'center',
-            valign: 'middle',
-          },
-        });
+
+        // Create the table
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 45,
+        styles: {
+          halign: 'center', // Horizontal alignment of text (center)
+          valign: 'middle', // Vertical alignment of text (middle)
+          lineWidth: 0.2, // Border thickness for the cells
+        },
+        headStyles: {
+          fillColor: [0, 0, 0], // Black background for header
+          textColor: [255, 255, 255], // White text for header
+          halign: 'center',
+          valign: 'middle',
+          lineWidth: 0.5, // Thicker border for header
+        },
+        bodyStyles: {
+          fillColor: [255, 255, 255], // White background for all rows
+          textColor: [0, 0, 0], // Black text
+          halign: 'center',
+          valign: 'middle',
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255], // Force alternate rows to have a white background too
+        },
+        tableLineWidth: 0.2, // Line width of the border
+        tableLineColor: [0, 0, 0], // Border color (black)
+      })
+
+       // Adding page numbers
+       const totalPages = doc.internal.getNumberOfPages();
+       for (let i = 1; i <= totalPages; i++) {
+         doc.setPage(i); // Go to the page
+         const pageWidth = doc.internal.pageSize.getWidth(); // Get the width of the page
+         const pageHeight = doc.internal.pageSize.getHeight(); // Get the height of the page
+         doc.text(`Page- ${i} `, pageWidth / 2, pageHeight - 10, { align: 'center' }); // Add page number at the bottom
+       }
     
         doc.save('ledger.pdf');      
 
+  }
+
+  if(!loggedUser){
+    return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
   }
 
     return (

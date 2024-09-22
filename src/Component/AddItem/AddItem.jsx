@@ -225,8 +225,9 @@ const AddItem = () => {
             )}
           />
           {errors.category && <p className="text-red-500">{errors.category.message}</p>}
+             {/* Quantity--------- */}
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Item Quantity</label>
-                <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " />
+                <input type="text" {...register("quantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " required  />
 
                 {errorMessage && (
                     <p className="text-red-300">
@@ -237,7 +238,7 @@ const AddItem = () => {
 
                 {/* Minimum Quantity */}
                 <label htmlFor="" className="text-[#03A9F4] text-left font-bold text-xl flex justify-start">Minimum Quantity</label>
-                <input type="text" {...register("minimumQuantity", { required: true })} placeholder="quantity" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " />
+                <input type="text" {...register("minimumQuantity", { required: true })} placeholder="Min quantity for Stock Alert" className="input input-bordered text-black w-full hover:scale-105 transition duration-300 ease-in-out " />
 
                 {errorMessage2 && (
                     <p className="text-red-300">

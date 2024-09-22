@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import Demand from "../Demand/Demand";
-import { removeItem } from "localforage";
 import { motion } from "framer-motion"
 import useLoggedUser from "../useLoggedUser/useLoggedUser";
 
@@ -22,6 +20,7 @@ const Requisition = () => {
     const [itemId, setItemId]=useState(null)
     const [searchTerm, setSearchTerm]=useState('')
     const [searchItem,setSearchItem]=useState(null)
+    
 
 
     const handleSearchTerm=(e)=>{
@@ -168,6 +167,7 @@ const Requisition = () => {
 
  //Pagenation end -------
 
+ 
 
 
 
@@ -176,6 +176,7 @@ const Requisition = () => {
     }
 
     //Sreach item-------
+    
     
 
 console.log('input data',inputData, 'color data', colorData)
@@ -212,19 +213,7 @@ console.log('input data',inputData, 'color data', colorData)
               {/* left side start */}
               <div className="px-2 flex flex-col mt-0 md:mt-11 lg:mt-11  w-[100%] md:w-[20%] lg:w-[20%] ">
                 <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Search Item</h2>
-                <input onChange={handleSearchTerm} type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " />
-                <h2 className="text-lg font-bold text-white bg-[#7C4DFF] py-2 mb-3">Item Catagory</h2>
-               
-
-                <select  className="input input-bordered font-normal text-gray-400 w-full hover:scale-105 transition duration-300 ease-in-out">
-                <option value="" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Select a category</option>
-                <option value="computer" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Computer</option>
-                <option value="electric" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Electric</option>
-                <option value="stationary" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Stationary</option>
-                <option value="miscellaneous" className="text-lg font-normal text-gray-400 bg-white py-2 mb-4 text-center">Miscellaneous</option>
-              </select>
-                
-                
+                <input onChange={handleSearchTerm} type="text"  placeholder="Search Item" className="input input-bordered text-black w-full mb-8 bg-white " /> 
                 </div>
               {/* left side end */}
 
@@ -267,7 +256,7 @@ console.log('input data',inputData, 'color data', colorData)
             searchTerm?.length==0 &&  paginationItem?.map((item,index)=><>
             <tr className="lg:text-xl text-white  text-center">
             <th className="">{currentPage*itemsPerPage+ index+1}</th>
-            <td className="max-w-32">{item.itemName}</td>
+            <td className="max-w-32">{item?.itemName}</td>
             <td>{item.quantity}</td>
             <td className=""> <input id={`id${index}`} onChange={(e)=>handleInputData(e,item?._id,index)} type="text" name="demand" value={colorData[item?._id]?.demand } className=' min-w-10 max-w-12 text-black text-center rounded-sm '  /> </td>
             <td className=""><textarea onChange={(e)=>handleInputData(e,item?._id,index)} name="purpose" value={colorData[item?._id]?.purpose || ""} id="" className="max-w-12 max-h-5 md:max-h-7 lg:max-h-7  text-black rounded-sm   "></textarea></td>
