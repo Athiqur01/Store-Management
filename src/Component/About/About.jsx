@@ -7,7 +7,7 @@ const InventoryManagement = () => {
     const paragraphText="BBM Inventory Management is a web-based application designed to streamline and manage the internal inventory processes of Bangladesh Betar, Mymensingh, a government media institution. The system allows members of the institution to submit requisitions for goods, which are then evaluated by the storekeeper for justification. Upon validation, the final approval is given by the relevant authority. The application tracks entries, exits, and requisitions, ensuring real-time updates on inventory levels. Additionally, it offers the functionality to export data into PDF format, allowing for easy reporting and record-keeping at the discretion of the authority."
 
     return (
-        <section className="pt-20 md:pt-24 ">
+        <section className="pt-20 md:pt-24 lg:pt-32 ">
             
             <motion.h2
         className="text-white font-bold text-3xl md:text-6xl lg:text-7xl text-center"

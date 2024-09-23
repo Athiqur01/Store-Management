@@ -11,7 +11,7 @@ const InventoryManagement = () => {
     const headingText = "Inventory Management";
 
     return (
-        <section className="py-20 md:py-24 ">
+        <section className="py-20 md:py-24 lg:py-32 ">
             
             <motion.h2
         className="text-white font-bold text-3xl md:text-6xl lg:text-7xl text-center"

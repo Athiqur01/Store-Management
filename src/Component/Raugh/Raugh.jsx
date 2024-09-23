@@ -1,136 +1,167 @@
-import { useContext, useState, useEffect, useRef } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import image from '../../assets/register.png';
+import { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { sendEmailVerification } from "firebase/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const Navbar = () => {
-    const { user, logOut } = useContext(AuthContext);
+const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const { createUser, setLoading } = useContext(AuthContext);
 
-    // Get operation to fetch user
-    const { data: loggedUser } = useQuery({
-        queryKey: ['loggedUser'],
-        queryFn: async () => {
-            const res = await axios.get(`http://localhost:5012/user?email=${user?.email}`);
-            return res.data;
-        },
-        enabled: !!(user?.email),
-        retry: 2,
-        refetchOnWindowFocus: true,
-        refetchOnMount: true,
-        staleTime: 0,
-    });
+  // React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-    // State for mobile dropdown menu
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isSubMenuOpen, setIsSubMenuOpen] = useState(false); // Sub-menu state
-    const [dropDownState, setDropDownState] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
-    // Ref to track the dropdown
-    const dropdownRef = useRef(null);
+  // Image upload handler
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
 
-    // Toggle mobile menu
-    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+    try {
+      const response = await axios.post(`https://api.imgbb.com/1/upload?key=your_imgbb_api_key`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return response.data.data.url; // Returning the image URL
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      return null;
+    }
+  };
 
-    // Toggle sub-menu
-    const toggleSubMenu = () => setIsSubMenuOpen(!isSubMenuOpen);
-    const toggleDropDown = () => setDropDownState(!dropDownState);
-    
-    // Effect to handle clicks outside the dropdown
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropDownState(false);
-            }
-        };
+  const onSubmit = async (data) => {
+    const { designation, email, name, password, image } = data;
+    const status = 'user';
+    const userData = { designation, email, name, status };
 
-        if (dropDownState) {
-            document.addEventListener("click", handleClickOutside);
-        } else {
-            document.removeEventListener("click", handleClickOutside);
-        }
+    try {
+      // Upload image
+      const imageUploadUrl = await uploadImage(image[0]);
 
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [dropDownState]);
+      if (imageUploadUrl) {
+        userData.profileImage = imageUploadUrl; // Attach image URL to user data
+      }
 
-    const NavLinkcenter = (
-        <>
-            <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md '>Home</NavLink>
-            <NavLink to='/requisition' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Requisition</NavLink>
-            <NavLink to='/request' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Request</NavLink>
-            <NavLink className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md'>Search</NavLink>
-        </>
-    );
+      createUser(email, password)
+        .then((result) => {
+          if (result.user) {
+            axios.post("http://localhost:5012/user", userData)
+              .then((res) => {
+                if (res.data.insertedId) {
+                  Swal.fire({
+                    position: "top-center",
+                    icon: "success",
+                    title: "To verify the email. please check your email ",
+                    showConfirmButton: true,
+                  });
+                }
+              });
 
-    return (
-        <div>
-            <div className="navbar bg-[#7B1FA2] ">
+            sendEmailVerification(result?.user)
+              .then(() => {
+                console.log('Email verification sent');
+              });
+          }
+        });
 
-                {/* Navbar Start */}
-                <div className="navbar-start">
-                    <div className="dropdown">
-                        {/* Mobile Hamburger Menu Button */}
-                        <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden" onClick={toggleMobileMenu}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
-                            </svg>
-                        </div>
-                    </div>
-                    <Link to='/' className="btn btn-ghost px-4 py-2 text-xl font-semibold text-[#FFFFFF] hover:text-[#03A9F4] transition duration-300 ease-in-out rounded-md">BBM Inventory Management</Link>
-                </div>
+      reset(); // Reset the form after submission
+    } catch (error) {
+      console.error('Error registering the user:', error);
+    }
+  };
 
-                {/* Navbar Center for Larger Screens */}
-                <div className="navbar-center hidden lg:flex">
-                    <ul className="menu menu-horizontal px-1">
-                        {NavLinkcenter}
-                    </ul>
-                </div>
+  // Show password toggle
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-                {/* Navbar End */}
-                <div className="navbar-end">
-                    {user ? (
-                        <button onClick={toggleDropDown} className="rounded-full w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-base font-semibold text-[#FFFFFF] bg-[#03A9F4] text-center">user</button>
-                    ) : (
-                        <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
-                    )}
+  return (
+    <div className="pb-10 md:pb-14 lg:pb-20">
+      <h2 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold text-white py-6 md:py-14 lg:py-16">
+        Register
+      </h2>
 
-                    {/* Dropdown */}
-                    <div ref={dropdownRef} className={`bg-[#7B1FA2] rounded-b-md z-10 absolute w-48 md:w-60 lg:w-64 mt-[248px] md:mt-[255px] lg:mt-[265px] duration-1000 delay-1000 ${dropDownState ? 'block' : 'hidden'}`}>
-                        <ul className="p-4 font-bold text-white">
-                            <button className="btn btn-ghost w-full text-left"><li>{loggedUser?.name || 'User Name'}</li></button>
-                            <Link to='/dashboard'><button className="btn btn-ghost w-full text-left"><li>Dashboard</li></button></Link>
-                            <button onClick={logOut} className="btn btn-ghost w-full text-left"><li>Log Out</li></button>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {isMobileMenuOpen && (
-                <div onClick={toggleMobileMenu} className="lg:hidden bg-[#9C27B0] max-w-[150px] p-4 rounded-md">
-                    <ul className="space-y-2">
-                        <li><NavLink to='/' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Home</NavLink></li>
-                        <li><NavLink to='/requisition' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Requisition</NavLink></li>
-                        <li><NavLink to='/request' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Request</NavLink></li>
-                        <li>
-                            {/* Sub-menu Toggle */}
-                            <button onClick={toggleSubMenu} className="block text-gray-800 p-2 rounded-md w-full text-left hover:bg-gray-200">
-                                Search
-                            </button>
-                            {isSubMenuOpen && (
-                                <ul className="pl-4 space-y-2 mt-2">
-                                    <li><NavLink to='/search1' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Submenu 1</NavLink></li>
-                                    <li><NavLink to='/search2' className='block text-gray-800 hover:bg-gray-200 p-2 rounded-md'>Submenu 2</NavLink></li>
-                                </ul>
-                            )}
-                        </li>
-                    </ul>
-                </div>
-            )}
+      <div className="flex flex-col md:flex-row lg:flex-row">
+        <div className="w-full md:w-3/2 lg:w-w-3/7 px-2 text-center flex justify-center items-center">
+          <img className="rounded-md" src={image} alt="" />
         </div>
-    );
+
+        <div className='lg:w-1/7'>
+          <p className='w-[2px] h-full bg-slate-50 hidden md:block lg:block py-8'></p>
+        </div>
+
+        <div className="w-full md:w-3/2 lg:w-w-3/7 text-center flex justify-center items-center px-2 md:px-10 lg:px-14 py-10 md:py-6 lg:py-4">
+          <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-10">
+              <input
+                type="text"
+                name='name'
+                placeholder="Your Name"
+                {...register("name", { required: true })}
+                className="input input-bordered text-black w-full"
+              />
+              <input
+                type="text"
+                name='designation'
+                {...register("designation", { required: true })}
+                placeholder="Your Designation"
+                className="input input-bordered text-black w-full"
+              />
+              
+              <input
+                type="text"
+                name='email'
+                {...register("email", { required: true })}
+                placeholder="Your Email"
+                className="input input-bordered text-black w-full"
+              />
+              
+              {/* Image upload field */}
+              <input
+                type="file"
+                name='image'
+                {...register("image", { required: true })}
+                className="input input-bordered text-black w-full"
+              />
+              {errors.image && <p className="text-red-500">Image is required</p>}
+              
+              {/* Password input */}
+              <label className="input input-bordered flex items-center gap-2">
+                <input
+                  onClick={handleShowPassword}
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Your Password"
+                  {...register("password", { required: true })}
+                  className="grow"
+                />
+                <span className="text-2xl">{showPassword ? <FaEyeSlash /> : <FaEye />} </span>
+              </label>
+
+              <button
+                type="submit"
+                className='text-white px-4 py-2 w-full bg-[#4CAF50] rounded-md border border-transparent hover:border-[#FF00FF] transition duration-500 ease-in-out text-lg font-bold'>
+                Submit
+              </button>
+            </form>
+
+            <p className="pb-10 pt-6 text-white">
+              If registered, please <span className="text-blue-300 font-bold"><Link to='/login'>Login</Link></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default Navbar;
+export default Register;

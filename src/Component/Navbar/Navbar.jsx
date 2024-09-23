@@ -110,7 +110,9 @@ console.log('order',orderedList)
                     <NavLink to='/alart' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] hover:text-[#03A9F4] hover:scale-125 transition duration-300 ease-in-out rounded-md flex gap-[2px]'><span className="">Stock Alert</span><sup className={`text-xs bg-red-400 w-[18px] h-[18px] text-center rounded-full ${(userStatus==='admin' || userStatus==='keeper')? 'display': 'hidden'} ${itemMessage?.length===0 && 'hidden'} `  }>{itemMessage?.length}</sup></NavLink> 
                   </>
    
-  
+       if(user && !loggedUser){
+        return <p className="flex justify-center"><span className="loading loading-ring loading-lg"></span></p>
+       }
 
     return (
       <div>
@@ -146,7 +148,7 @@ console.log('order',orderedList)
             // <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
             //   <p>{loggedUser?.name}</p> Logout
             // </button>
-            <button onClick={toggleDropDown} className="rounded-full  w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16   font-semibold text-[#FFFFFF] text-center text-4xl lg:text-5xl"><FaUserCircle /></button>
+            <button onClick={toggleDropDown} className="rounded-full  w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16   font-semibold text-[#FFFFFF] text-center text-4xl lg:text-5xl"><img className="rounded-full w-14 h-14" src={loggedUser?.imageUrl} alt="img" /></button>
           ) : (
             <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
           )}

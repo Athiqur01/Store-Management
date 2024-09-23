@@ -90,11 +90,11 @@ const {
             <h2 className="text-4xl md:text-6xl lg:text-7xl text-center font-bold text-white py-6 md:py-14 lg:py-16">Login</h2>
 
             <div className="flex flex-col md:flex-row lg:flex-row">
-            <div  className="w-full md:w-3/2 lg:w-w-3/7 px-2 text-center flex justify-center items-center">
+            <div  className="w-full md:w-3/2 lg:w-w-3/7  text-center flex justify-center items-center px-2 md:px-6 lg:px-8">
                 <img className="rounded-md max-h-[500px]" src={image} alt="" />
                 </div>
 
-                <div className='lg:w-1/7'>
+                <div className='lg:w-1/7 '>
                 <p className='w-[2px] h-full bg-slate-50 hidden md:block lg:block py-8'></p>
                 </div>
                  
@@ -102,11 +102,11 @@ const {
 
                  {/* Contact form */}
                 <div 
-                className="w-full md:w-3/2 lg:w-w-3/7 text-center flex justify-center items-center px-2 md:px-10 lg:px-14 py-10 md:py-6 lg:py-4"
+                className="w-full md:w-3/2 lg:w-w-3/7 text-center flex justify-center items-center  py-10 md:py-6 lg:py-4 px-2 md:px-6 lg:px-8 "
                  >
                     
-                <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8">
-                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 px-10 pt-10 "   >
+                <div className="border-white border-2 rounded-md px-2 md:px-6 lg:px-8 w-full">
+                <form onSubmit={handleSubmit(onSubmit)} action="" className="space-y-4 px-10 pt-10 w-full"   >
                <label htmlFor=""> <input  type="text" name='email' placeholder="Your Email" {...register("email", { required: true })} className="input input-bordered text-black w-full " /></label>
                {forgetPassError && <small className="text-red-400">{forgetPassError}</small>}
                 {/* Password input start */}

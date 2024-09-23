@@ -10,7 +10,7 @@ import alert from '../../assets/alert.png'
 const RequisitionAndStock = () => {
     const headingText = "Requisition & Stock";
     return (
-        <section className="pb-20 md:pb-24 ">
+        <section className="pb-20 md:pb-24 lg:pb-32 ">
             
       <motion.h2
         className="text-white font-bold text-3xl md:text-6xl lg:text-7xl text-center"
