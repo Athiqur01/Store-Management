@@ -148,7 +148,7 @@ console.log('order',orderedList)
             // <button onClick={logOut} className='px-4 py-2 text-base font-semibold text-[#FFFFFF]'>
             //   <p>{loggedUser?.name}</p> Logout
             // </button>
-            <button onClick={toggleDropDown} className="rounded-full  w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16   font-semibold text-[#FFFFFF] text-center text-4xl lg:text-5xl"><img className="rounded-full w-14 h-14" src={loggedUser?.imageUrl} alt="img" /></button>
+            <button onClick={toggleDropDown} className="rounded-full  w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16   font-semibold text-[#FFFFFF] text-center text-4xl lg:text-5xl"><img className="rounded-full w-14 h-14" src={loggedUser?.imageUrl} alt={userImg} /></button>
           ) : (
             <NavLink to='/login' className='px-4 py-2 text-base font-semibold text-[#FFFFFF] '>LogIn</NavLink>
           )}

@@ -58,12 +58,17 @@ const Demand = () => {
     
 
     // Post Operation to send data to storekeeper
+    const requisitorSignature=loggedUser?.signatureUrl
+        console.log('req sign',requisitorSignature)
     const handleStoreKeeper = () => {
         const requisitionBy = userName;
         const designation=loggedUser?.designation
         const isChecked = false;
+        const currentDate = new Date();
+        const requisitionDate=currentDate.toLocaleDateString();
+        
 
-        axios.post('http://localhost:5012/storeKeeper', { LocalStorageItem: localStorageItems, requisitionBy,designation,isChecked})
+        axios.post('http://localhost:5012/storeKeeper', { LocalStorageItem: localStorageItems, requisitionBy,designation,isChecked,requisitorSignature,requisitionDate})
             .then(res => {
                 if (res.data) {
                     localStorage.removeItem('localData');
@@ -73,7 +78,9 @@ const Demand = () => {
     };
 
     
-
+if(!loggedUser){
+    return <p>lsoading</p>
+}
     return (
         <div className="text-white w-[100%] md:w-[20%] lg:w-[20%] px-2 flex flex-col items-center">
             <h2 className="text-3xl font-bold text-center mb-2 display md:hidden lg:hidden">Issued Items</h2>

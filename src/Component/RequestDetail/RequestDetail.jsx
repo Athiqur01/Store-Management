@@ -37,6 +37,7 @@ const RequestDetail = () => {
     
     
     const userStatus=loggedUser?.status
+    
 
     // count sib number----
     const {data:sibSerial}=useQuery({
@@ -65,7 +66,7 @@ const RequestDetail = () => {
     
     });
 
-    console.log('detaillll',detailData)
+    console.log('detaillll',detailData?.requisitionDate)
     // useEffect to update demandState when detailData changes
     useEffect(() => {
       if (detailData && Array.isArray(detailData?.LocalStorageItem)) {
@@ -185,19 +186,23 @@ if(detailData?.LocalStorageItem?.length===0){
     const isChecked=detailData?.isChecked
     const requisitionBy=detailData?.requisitionBy
     const demanderDesignation=detailData?.designation
+    const signatureRE=loggedUser?.signatureUrl
+    const requisitorSignature=detailData?.requisitorSignature
+    const requisitionDate=detailData?.requisitionDate
+    //loggedUser?.status==='admin' && setSignatureRE(loggedUser?.signatureUrl)
     console.log('detail Data2:--- ',requisitionBy,demanderDesignation)
     
     if(!view){
-      return <p>data is loading for----</p> 
+      return <div><span className="loading loading-dots loading-lg"></span></div>
     }
     if(!demandState){
-      return <p>data is loading----</p>
+      return <div><span className="loading loading-dots loading-lg"></span></div>
     }
     // if(loading){
     //   return <p>data is loading------</p>
     // }
    
-    console.log('detail Data:--- ',detailData?.LocalStorageItem[0].fullItemDetails.quantity)
+    console.log('detail Data:--- ',signatureRE)
 
     view.map(item=>{
       console.log('quantity', item?.demand)
@@ -205,7 +210,7 @@ if(detailData?.LocalStorageItem?.length===0){
     
 
     // update data in the sib and ledger-----
-    console.log('logged user',loggedUser?.name)
+    console.log('RE',signatureRE)
     const {totalItems}=sibSerial
     const sibSerialPerse=parseInt(totalItems)+1
     const currentDate = new Date();
@@ -266,7 +271,7 @@ if(detailData?.LocalStorageItem?.length===0){
     ;
 
    //requisition Register
-   const registerData={view,approvalDate,approvedBy,approverDesignation,demanderDesignation,requisitionBy}
+   const registerData={view,approvalDate,approvedBy,approverDesignation,demanderDesignation,requisitionBy,signatureRE,requisitorSignature,requisitionDate}
 
    axios.post('http://localhost:5012/requisition/register',{registerData}) //post operation in sibCollection and ledger and requisition Register simultinuously
    .then(res=>{
