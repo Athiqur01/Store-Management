@@ -58,8 +58,16 @@ const pages=[]
         const encodedName = encodeURIComponent(name);
         navigate(`/ledger/${encodedName}`)
        console.log(name)
-          
-     
+    }
+  
+    const handleStartingDate=(e)=>{
+      console.log('start',e.target.value)
+    }
+    const handleEndingDate=(e)=>{
+      console.log('start',e.target.value)
+    }
+    const handleSearch=(e)=>{
+      
     }
 
     return (
@@ -89,6 +97,12 @@ const pages=[]
         </motion.span>
       ))}
     </motion.h2>
+
+    {/* Search according to date */}
+    <div className="flex flex-col md:flex-row lg:flex-row gap-4 py-4">
+      <div className="flex gap-4"><h2 className="text-[#4CAF50] text-xl font-bold">Starting Date:</h2> <input onChange={handleStartingDate} type="date" className="text-black rounded-sm"/></div>
+      <div className="flex gap-4"><h2 className="text-[#4CAF50] text-xl font-bold">Ending Date:</h2> <input onChange={handleEndingDate} type="date" className="text-black rounded-sm"/></div>
+    </div>
 
                 <table className="table   ">
                   {/* head */}

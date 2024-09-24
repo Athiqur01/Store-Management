@@ -173,6 +173,11 @@ const {data:srbSerial}=useQuery({
       ))}
     </motion.h2>
 
+    {/* Search according to date */}
+    <div>
+      <h2>Starting Date</h2> <input type="date" />
+    </div>
+
             <div className="overflow-x-auto px-2  lg:px-6 py-10 mx-auto flex justify-center ">
 
           
